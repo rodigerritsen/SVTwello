@@ -6,6 +6,10 @@
       "doelpunten": [
         { "speler": "Rodi Gerritsen", "assist": "Mike Willems", "minuut": 18 },
         { "speler": "Rodi Gerritsen", "assist": "", "minuut": 74 }
+      ],
+      "kaarten": [
+        { "speler": "Rodi Gerritsen", "type": "geel" },
+        { "speler": "Mike Willems", "type": "rood" }
       ]
     },
     { "id": "M669057056",  "datum": "2026-09-06", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "Columbia 3",           "uitslag": "" },

@@ -3,19 +3,8 @@
     {
       "rugnummer": 10,
       "naam": "Rodi Gerritsen",
-      "leeftijd": 30,
       "positie": "CM",
-      "voet": "Rechts",
-      "training": 0,
-      "trainingTotaal": 0,
-      "wedstrijden": 0,
-      "wedstrijdenTotaal": 0,
-      "minuten": 0,
-      "minutenMax": 0,
-      "doelpunten": 0,
-      "assists": 0,
-      "geelKaarten": 0,
-      "roodKaarten": 0
+      "voet": "Rechts"
     }
   ]
 }
