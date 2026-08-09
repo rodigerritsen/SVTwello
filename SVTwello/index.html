@@ -41,7 +41,7 @@
 
         <button class="nav-btn"
                 data-page="spelers">
-            Spelers
+            Team
         </button>
 
         <button class="nav-btn"
@@ -185,10 +185,10 @@
 
     <div class="page-title">
 
-        <h2>Spelers</h2>
+        <h2>Team</h2>
 
         <p>
-            Overzicht van de actuele spelersstatistieken.
+            Overzicht van spelers, gastspelers en staf.
         </p>
 
     </div>
@@ -274,6 +274,18 @@
 
             </table>
 
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-header">
+            <h3>Staf</h3>
+        </div>
+
+        <div class="card-body">
+            <div id="staffList" class="staff-list"></div>
         </div>
 
     </div>
@@ -388,7 +400,9 @@ const defaultData = {
 
     matches: [],
 
-    standings: []
+    standings: [],
+
+    staff: []
 
 };
 
@@ -725,6 +739,7 @@ function renderPlayers() {
 
                             <div class="player-name">
                                 ${escapeHTML(p.name)}
+                                ${p.guest ? `<span class="badge guest">Gastspeler</span>` : ""}
                             </div>
 
                             <span class="player-position">
@@ -795,6 +810,34 @@ function renderPlayers() {
 /* =====================================================
    WEDSTRIJDEN
 ===================================================== */
+
+function renderStaff() {
+
+    const container =
+        document.getElementById("staffList");
+
+    if (!container) return;
+
+    if (!data.staff.length) {
+        container.innerHTML = `
+            <div class="empty">
+                Geen stafleden gevonden.
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML =
+        data.staff.map(member => `
+            <div class="staff-item">
+                <div>
+                    <div class="staff-name">${escapeHTML(member.naam)}</div>
+                    <div class="staff-role">${escapeHTML(member.rol)}</div>
+                </div>
+            </div>
+        `).join("");
+}
+
 
 function renderMatches() {
 
@@ -1150,6 +1193,8 @@ function renderAll() {
 
     renderPlayers();
 
+    renderStaff();
+
     renderMatches();
 
     renderStatistics();
@@ -1163,6 +1208,7 @@ function buildPlayersFromMatchData(spelersData, wedstrijdenData) {
         number:          s.rugnummer,
         name:            s.naam,
         position:        s.positie,
+        guest:           Boolean(s.gastspeler),
         training:        s.training        ?? 0,
         trainingTotal:   s.trainingTotaal  ?? 0,
         attendance:      s.wedstrijden     ?? 0,
@@ -1291,6 +1337,8 @@ Promise.all([
     if (spelers?.spelers?.length || wedstrijden?.wedstrijden) {
         data.players = buildPlayersFromMatchData(spelers, wedstrijden);
     }
+
+    data.staff = spelers?.staf || [];
 
     if (svhj?.winnaars) {
         renderSpelerVanHetJaar(svhj.winnaars);

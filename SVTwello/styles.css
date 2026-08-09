@@ -346,6 +346,37 @@ tbody tr:hover {
     color: #a62626;
 }
 
+.badge.guest {
+    background: #f5f7fb;
+    color: #4b5d73;
+    border: 1px solid #d7e0ec;
+}
+
+.staff-list {
+    display: grid;
+    gap: 10px;
+}
+
+.staff-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 12px 14px;
+    border: 1px solid #eef2f7;
+    border-radius: 14px;
+    background: #fbfdff;
+}
+
+.staff-name {
+    font-weight: 700;
+}
+
+.staff-role {
+    color: var(--muted);
+    font-size: 13px;
+}
+
 .stats-page-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
