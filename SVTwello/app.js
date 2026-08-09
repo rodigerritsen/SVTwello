@@ -128,12 +128,13 @@ function renderPlayers() {
 
 function renderPlayerRow(player) {
     const foot = player.foot ? ' • ' + escapeHTML(player.foot) : '';
+    const age = player.birthdate ? ' • ' + escapeHTML(calculateAge(player.birthdate) + ' jaar') : '';
     const guest = player.guest ? ' <span class="badge guest">Gastspeler</span>' : '';
 
     return '<tr>'
         + '<td>' + escapeHTML(player.number || '—') + '</td>'
         + '<td><div class="player"><div><div class="player-name">' + escapeHTML(player.name) + guest + '</div>'
-        + '<span class="player-position">' + escapeHTML(player.position || '—') + foot + '</span></div></div></td>'
+        + '<span class="player-position">' + escapeHTML(player.position || '—') + foot + age + '</span></div></div></td>'
         + '<td>' + escapeHTML(player.position || '—') + '</td>'
         + '</tr>';
 }
@@ -147,7 +148,10 @@ function renderStaff() {
     }
 
     container.innerHTML = '<div class="table-wrapper"><table><tbody>'
-        + data.staff.map(member => '<tr><td>' + escapeHTML(member.naam) + '</td></tr>').join('')
+        + data.staff.map(member => {
+            const age = member.geboortedatum ? ' (' + escapeHTML(calculateAge(member.geboortedatum) + ' jaar') + ')' : '';
+            return '<tr><td>' + escapeHTML(member.naam) + age + '</td></tr>';
+        }).join('')
         + '</tbody></table></div>';
 }
 
@@ -579,6 +583,19 @@ function formatDate(date) {
     return new Date(date + 'T12:00:00').toLocaleDateString('nl-NL', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
+function calculateAge(dateString) {
+    const birth = new Date(dateString + 'T00:00:00');
+    if (Number.isNaN(birth.getTime())) return '–';
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    const dayDiff = today.getDate() - birth.getDate();
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age -= 1;
+    }
+    return age;
+}
+
 function escapeHTML(value) {
     return String(value ?? '')
         .replace(/&/g, '&amp;')
@@ -611,6 +628,7 @@ function buildPlayersFromMatchData(spelersData, wedstrijdenData) {
         name: s.naam,
         position: s.positie,
         foot: s.voet || 'rechts',
+        birthdate: s.geboortedatum || '',
         guest: Boolean(s.gastspeler),
         training: s.training ?? 0,
         trainingTotal: s.trainingTotaal ?? 0,

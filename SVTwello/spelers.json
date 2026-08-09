@@ -3,164 +3,221 @@
     {
       "rugnummer": 1,
       "naam": "Dennis Schreurs",
-      "positie": "Keeper"
+      "positie": "Keeper",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 2,
       "naam": "Dennis Witteveen",
-      "positie": "Verdediger"
+      "positie": "Verdediger",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 3,
       "naam": "Casper van Brink",
-      "positie": "Verdediger"
+      "positie": "Verdediger",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 4,
       "naam": "Marc Albers",
-      "positie": "Verdediger"
+      "positie": "Verdediger",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 5,
       "naam": "Jesse van Brink",
-      "positie": "Aanvaller"
+      "positie": "Aanvaller",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 6,
       "naam": "Delano de Vogel",
-      "positie": "Verdediger"
+      "positie": "Verdediger",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 9,
       "naam": "Glenn Buitenhuis",
-      "positie": "Aanvaller"
+      "positie": "Aanvaller",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 10,
       "naam": "Rodi Gerritsen",
-      "positie": "Middenvelder"
+      "positie": "Middenvelder",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 11,
       "naam": "Niels Gijsberts",
-      "positie": "Middenvelder"
+      "positie": "Middenvelder",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 12,
       "naam": "Jasper Nijdeken",
-      "positie": "Middenvelder"
+      "positie": "Middenvelder",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 13,
       "naam": "Jean-Paul de Haas",
-      "positie": "Aanvaller"
+      "positie": "Aanvaller",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 14,
       "naam": "Robbert Teelen",
-      "positie": "Middenvelder"
+      "positie": "Middenvelder",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 15,
       "naam": "Thijs Oldenboom",
       "positie": "Aanvaller",
-      "voet": "links"
+      "voet": "links",
+      "geboortedatum": "1996-06-08"
     },
     {
       "rugnummer": 19,
       "naam": "Jorn Oosting",
-      "positie": "Middenvelder"
+      "positie": "Middenvelder",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 27,
       "naam": "Tom Nijdeken",
-      "positie": "Middenvelder"
+      "positie": "Middenvelder",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 77,
       "naam": "Jani Setz",
       "positie": "Aanvaller",
-      "voet": "links"
+      "voet": "links",
+      "geboortedatum": "1996-06-08"
     },
     {
       "rugnummer": 89,
       "naam": "Nicky Eekhuis",
-      "positie": "Aanvaller"
+      "positie": "Aanvaller",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": 99,
       "naam": "Bram Dolman",
-      "positie": "Aanvaller"
+      "positie": "Aanvaller",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": "21",
       "naam": "Berry van der Scheer",
-      "positie": "Verdediger"
+      "positie": "Verdediger",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": "",
       "naam": "Denzel Boscher",
       "positie": "Verdediger",
-      "gastspeler": true
+      "gastspeler": true,
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": "16",
       "naam": "Jervin Leisink Meijer",
-      "positie": "Aanvaller"
+      "positie": "Aanvaller",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": "",
       "naam": "Koen Broekman",
-      "positie": "Verdediger"
+      "positie": "Verdediger",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": "",
       "naam": "Stan Martens",
       "positie": "Verdediger",
-      "gastspeler": true
+      "gastspeler": true,
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": "",
       "naam": "Thomas van Kooten",
-      "positie": "Verdediger"
+      "positie": "Verdediger",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": "",
       "naam": "Tommy Nijdeken",
-      "positie": "Middenvelder"
+      "positie": "Middenvelder",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": "",
       "naam": "Samwel Yuda Mkai",
       "positie": "Aanvaller",
-      "gastspeler": true
+      "gastspeler": true,
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     },
     {
       "rugnummer": "",
       "naam": "Tygo Vijge",
-      "positie": "Verdediger"
+      "positie": "Verdediger",
+      "geboortedatum": "1996-06-08",
+      "voet": "rechts"
     }
   ],
   "staf": [
     {
       "naam": "Andrew Hietbrink",
-      "rol": "Leider"
+      "rol": "Leider",
+      "geboortedatum": "1996-06-08"
     },
     {
       "naam": "Jan Berkenbosch",
-      "rol": "Trainer"
+      "rol": "Trainer",
+      "geboortedatum": "1996-06-08"
     },
     {
       "naam": "Christiaan Grootgens",
-      "rol": "Trainer"
+      "rol": "Trainer",
+      "geboortedatum": "1996-06-08"
     },
     {
       "naam": "Sander Bouwmeester",
-      "rol": "Trainer"
+      "rol": "Trainer",
+      "geboortedatum": "1996-06-08"
     },
     {
       "naam": "Jeffrey Karrenbeld",
-      "rol": "Trainer"
+      "rol": "Trainer",
+      "geboortedatum": "1996-06-08"
     }
   ]
 }
