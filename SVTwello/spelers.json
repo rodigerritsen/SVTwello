@@ -91,7 +91,7 @@
       "positie": "Aanvaller"
     },
     {
-      "rugnummer": "",
+      "rugnummer": "21",
       "naam": "Berry van der Scheer",
       "positie": "Verdediger"
     },
@@ -103,12 +103,12 @@
     },
     {
       "rugnummer": "",
-      "naam": "Jervin",
+      "naam": "Jervin Leisink Meijer",
       "positie": "Verdediger"
     },
     {
       "rugnummer": "",
-      "naam": "Koen",
+      "naam": "Koen Broekman",
       "positie": "Verdediger"
     },
     {
@@ -119,13 +119,19 @@
     },
     {
       "rugnummer": "",
-      "naam": "Thomas Kooten",
+      "naam": "Thomas van Kooten",
       "positie": "Middenvelder"
     },
     {
       "rugnummer": "",
       "naam": "Tommy Nijdeken",
       "positie": "Middenvelder"
+    },
+    {
+      "rugnummer": "",
+      "naam": "Samwel Yuda Mkai",
+      "positie": "Middenvelder",
+      "gastspeler": true
     },
     {
       "rugnummer": "",
