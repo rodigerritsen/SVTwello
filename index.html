@@ -8,17 +8,17 @@
 
 <style>
 :root {
-    --green: #08783f;
-    --green-dark: #04552d;
-    --green-light: #e8f7ef;
+    --green: #178fcf;
+    --green-dark: #17325b;
+    --green-light: #e3f0fa;
     --white: #fff;
-    --bg: #f3f6f4;
-    --text: #17231d;
-    --muted: #718078;
-    --border: #dfe7e2;
+    --bg: #f3f6f9;
+    --text: #111c2d;
+    --muted: #637080;
+    --border: #dce4ed;
     --red: #d64545;
     --yellow: #e4b83d;
-    --blue: #3977d6;
+    --blue: #178fcf;
     --shadow: 0 8px 25px rgba(0,0,0,.07);
 }
 
@@ -77,13 +77,8 @@ header {
     height: 52px;
     border-radius: 50%;
     background: white;
-    color: var(--green);
-    display: grid;
-    place-items: center;
-    text-align: center;
-    font-weight: 900;
-    font-size: 12px;
-    line-height: 1;
+    object-fit: contain;
+    padding: 4px;
 }
 
 .brand h1 {
@@ -258,7 +253,7 @@ main {
 }
 
 .btn.secondary {
-    background: #edf2ef;
+    background: #e3edf8;
     color: var(--green-dark);
 }
 
@@ -288,14 +283,14 @@ td {
 }
 
 th {
-    background: #f7faf8;
+    background: #f5f8fc;
     color: var(--muted);
     font-size: 12px;
     text-transform: uppercase;
 }
 
 tbody tr:hover {
-    background: #f8fbf9;
+    background: #f0f5fc;
 }
 
 .player {
@@ -330,7 +325,7 @@ tbody tr:hover {
 .progress {
     width: 100px;
     height: 7px;
-    background: #e5ebe7;
+    background: #cce0f0;
     border-radius: 10px;
     overflow: hidden;
     margin-top: 5px;
@@ -350,8 +345,8 @@ tbody tr:hover {
 }
 
 .badge.green {
-    background: #e3f5ea;
-    color: #086333;
+    background: #d6edf9;
+    color: #0d5a8a;
 }
 
 .badge.yellow {
@@ -514,7 +509,7 @@ tbody tr:hover {
 }
 
 .admin-banner {
-    background: #102019;
+    background: #0d1e35;
     color: white;
     padding: 12px 20px;
     display: none;
@@ -597,7 +592,7 @@ tbody tr:hover {
 }
 
 footer {
-    background: #102019;
+    background: #0d1e35;
     color: white;
     text-align: center;
     padding: 25px;
@@ -613,7 +608,7 @@ footer span {
     right: 20px;
     bottom: 20px;
     z-index: 1000;
-    background: #102019;
+    background: #0d1e35;
     color: white;
     padding: 13px 17px;
     border-radius: 9px;
@@ -690,9 +685,11 @@ footer span {
 
     <div class="brand">
 
-        <div class="logo">
-            SV<br>TWELLO
-        </div>
+        <img
+            src="SV Twello_RGB.png"
+            alt="SV Twello logo"
+            class="logo"
+        >
 
         <div>
             <h1>SV Twello Zondag 2</h1>
@@ -849,6 +846,21 @@ footer span {
 
             </div>
 
+        </div>
+
+    </div>
+
+
+    <div class="card" style="margin-top:20px">
+
+        <div class="card-header">
+            <h3>🏆 Speler van het Jaar</h3>
+        </div>
+
+        <div class="card-body">
+            <div id="spelerVanHetJaar"
+                 style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px">
+            </div>
         </div>
 
     </div>
@@ -2320,13 +2332,21 @@ function renderDashboard() {
             .slice(-4)
             .reverse();
 
+    // Toon eerstvolgende wedstrijden als er nog geen uitslagen zijn
+    const upcoming =
+        data.matches
+            .filter(m => !m.score)
+            .sort((a, b) => a.date.localeCompare(b.date))
+            .slice(0, 4);
+
+    const dashboardMatches = played.length ? played : upcoming;
 
     document.getElementById("dashboardMatches")
         .innerHTML =
-        played.length
-        ? played.map(matchHTML).join("")
+        dashboardMatches.length
+        ? dashboardMatches.map(matchHTML).join("")
         : `<div class="empty">
-             Nog geen gespeelde wedstrijden.
+             Geen wedstrijden gevonden.
            </div>`;
 
 
@@ -3922,6 +3942,46 @@ function resetData() {
 
 
 /* =====================================================
+   SPELER VAN HET JAAR
+===================================================== */
+
+function renderSpelerVanHetJaar(winnaars) {
+
+    const container =
+        document.getElementById(
+            "spelerVanHetJaar"
+        );
+
+    if (!container) return;
+
+    container.innerHTML =
+        [...winnaars]
+            .sort((a, b) => b.jaar - a.jaar)
+            .map(w => `
+                <div style="
+                    background:var(--green-light);
+                    border-radius:12px;
+                    padding:16px;
+                    text-align:center;
+                ">
+                    <div style="
+                        font-size:28px;
+                        font-weight:900;
+                        color:var(--green);
+                        line-height:1;
+                    ">${w.jaar}</div>
+                    <div style="
+                        font-weight:700;
+                        margin-top:6px;
+                        font-size:15px;
+                    ">${escapeHTML(w.naam)}</div>
+                </div>
+            `).join("");
+
+}
+
+
+/* =====================================================
    HULPFUNCTIES
 ===================================================== */
 
@@ -4013,7 +4073,55 @@ loadData();
 
 checkLogin();
 
-renderAll();
+// Laad externe JSON-bestanden parallel
+Promise.all([
+    fetch("wedstrijden.json").then(r => r.json()).catch(() => null),
+    fetch("spelers.json").then(r => r.json()).catch(() => null),
+    fetch("speler-van-het-jaar.json").then(r => r.json()).catch(() => null)
+]).then(([wedstrijden, spelers, svhj]) => {
+
+    if (wedstrijden?.wedstrijden) {
+        // Vertaal het veld-formaat van wedstrijden.json naar intern formaat
+        data.matches = wedstrijden.wedstrijden.map(w => {
+            const isThuis = w.thuis === "SV Twello 2";
+            return {
+                id: w.id,
+                date: w.datum,
+                time: w.tijd,
+                opponent: isThuis ? w.uit : w.thuis,
+                location: isThuis ? "Thuis" : "Uit",
+                competition: "Competitie",
+                score: w.uitslag || ""
+            };
+        });
+    }
+
+    if (spelers?.spelers?.length) {
+        // Vertaal veld-formaat van spelers.json naar intern formaat
+        data.players = spelers.spelers.map(s => ({
+            number:          s.rugnummer,
+            name:            s.naam,
+            position:        s.positie,
+            training:        s.training        ?? 0,
+            trainingTotal:   s.trainingTotaal  ?? 0,
+            attendance:      s.wedstrijden     ?? 0,
+            attendanceTotal: s.wedstrijdenTotaal ?? 0,
+            minutes:         s.minuten         ?? 0,
+            maxMinutes:      s.minutenMax      ?? 0,
+            goals:           s.doelpunten      ?? 0,
+            assists:         s.assists         ?? 0,
+            yellow:          s.geelKaarten     ?? 0,
+            red:             s.roodKaarten     ?? 0
+        }));
+    }
+
+    if (svhj?.winnaars) {
+        renderSpelerVanHetJaar(svhj.winnaars);
+    }
+
+    renderAll();
+
+}).catch(() => renderAll());
 
 
 /* ENTER IN LOGIN */
