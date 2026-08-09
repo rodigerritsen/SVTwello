@@ -119,7 +119,7 @@ function renderPlayers() {
 
     const table = document.getElementById('playersTable');
     if (!players.length) {
-        table.innerHTML = '<tr><td colspan="3"><div class="empty">Geen spelers gevonden.</div></td></tr>';
+        table.innerHTML = '<tr><td colspan="5"><div class="empty">Geen spelers gevonden.</div></td></tr>';
         return;
     }
 
@@ -127,15 +127,15 @@ function renderPlayers() {
 }
 
 function renderPlayerRow(player) {
-    const foot = player.foot ? ' • ' + escapeHTML(player.foot) : '';
-    const age = player.birthdate ? ' • ' + escapeHTML(calculateAge(player.birthdate) + ' jaar') : '';
+    const age = player.birthdate ? escapeHTML(calculateAge(player.birthdate) + ' jaar') : '–';
     const guest = player.guest ? ' <span class="badge guest">Gastspeler</span>' : '';
 
     return '<tr>'
         + '<td>' + escapeHTML(player.number || '—') + '</td>'
-        + '<td><div class="player"><div><div class="player-name">' + escapeHTML(player.name) + guest + '</div>'
-        + '<span class="player-position">' + escapeHTML(player.position || '—') + foot + age + '</span></div></div></td>'
+        + '<td>' + escapeHTML(player.name) + guest + '</td>'
         + '<td>' + escapeHTML(player.position || '—') + '</td>'
+        + '<td>' + age + '</td>'
+        + '<td>' + escapeHTML(player.foot || 'rechts') + '</td>'
         + '</tr>';
 }
 
@@ -223,51 +223,23 @@ function renderStatistics() {
     const container = document.getElementById('statisticsContent');
     if (!container) return;
 
-    const goalsByMatch = getGoalsByMatch(data.matches);
-    const cardsTrend = getCardsTrend(data.matches);
-    const assistsByPeriod = getAssistsByPeriod(data.matches);
-
-    const topScorers = [...data.players]
-        .filter(player => Number(player.goals || 0) > 0)
-        .sort((a, b) => Number(b.goals || 0) - Number(a.goals || 0));
+    const tableRows = [...data.players]
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(player => [
+            player.name,
+            player.goals || 0,
+            player.assists || 0,
+            player.yellow || 0,
+            player.red || 0
+        ]);
 
     container.innerHTML = `
         <div class="card">
-            <div class="card-header"><h3>Doelpunten per wedstrijd</h3></div>
+            <div class="card-header"><h3>Statistieken</h3></div>
             <div class="card-body">
                 ${renderStatisticsTable(
-                    ['Wedstrijd', 'Doelpunten'],
-                    goalsByMatch.map(item => [item.label, item.value])
-                )}
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header"><h3>Kaarten per wedstrijd</h3></div>
-            <div class="card-body">
-                ${renderStatisticsTable(
-                    ['Wedstrijd', 'Geel', 'Rood'],
-                    cardsTrend.map(item => [item.label, item.yellow, item.red])
-                )}
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header"><h3>Assists per periode</h3></div>
-            <div class="card-body">
-                ${renderStatisticsTable(
-                    ['Periode', 'Assists'],
-                    Object.entries(assistsByPeriod).map(([period, value]) => [period, value])
-                )}
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header"><h3>Topscorers</h3></div>
-            <div class="card-body">
-                ${renderStatisticsTable(
-                    ['Speler', 'Doelpunten'],
-                    topScorers.map(player => [player.name, player.goals || 0])
+                    ['Speler', 'Doelpunten', 'Assists', 'Geel', 'Rood'],
+                    tableRows
                 )}
             </div>
         </div>`;
