@@ -20,7 +20,7 @@
 body {
     margin: 0;
     font-family: Inter, Arial, sans-serif;
-    background: var(--bg);
+    background: #f4f6f9;
     color: var(--text);
 }
 
@@ -40,7 +40,7 @@ header {
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 3px 18px rgba(0,0,0,.15);
+    box-shadow: 0 1px 8px rgba(0,0,0,.12);
 }
 
 .header-inner {
@@ -112,17 +112,17 @@ main {
 }
 
 .hero {
-    color: white;
-    background: var(--green-dark);
+    color: var(--green-dark);
+    background: #ffffff;
     padding: 30px;
     border-radius: 18px;
     margin-bottom: 20px;
-    box-shadow: var(--shadow);
+    border: 1px solid #e5ecf3;
 }
 
 .hero h2 {
     margin: 0 0 7px;
-    font-size: 30px;
+    font-size: 32px;
 }
 
 .hero p {
@@ -139,10 +139,10 @@ main {
 
 .stat {
     background: white;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-    box-shadow: var(--shadow);
+    border: 1px solid #e8eef6;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 6px 20px rgba(15,23,42,.06);
 }
 
 .stat-label {
@@ -165,19 +165,20 @@ main {
 
 .card {
     background: white;
-    border: 1px solid var(--border);
-    border-radius: 15px;
-    box-shadow: var(--shadow);
+    border: 1px solid #e8eef6;
+    border-radius: 20px;
+    box-shadow: 0 6px 22px rgba(15,23,42,.05);
     overflow: hidden;
 }
 
 .card-header {
-    padding: 17px 20px;
-    border-bottom: 1px solid var(--border);
+    padding: 18px 22px;
+    border-bottom: 1px solid #edf2f7;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
+    background: #f9fbfd;
 }
 
 .card-header h3 {
@@ -224,19 +225,22 @@ main {
 
 .btn {
     border: 0;
-    border-radius: 8px;
-    padding: 10px 14px;
+    border-radius: 12px;
+    padding: 11px 16px;
     background: var(--green);
     color: white;
     font-weight: 700;
+    transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
 }
 
 .btn:hover {
-    background: var(--green-dark);
+    background: #1565b5;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(21,101,181,.18);
 }
 
 .btn.secondary {
-    background: #e3edf8;
+    background: #eef5fb;
     color: var(--green-dark);
 }
 
