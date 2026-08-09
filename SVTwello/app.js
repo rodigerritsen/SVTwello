@@ -114,12 +114,12 @@ function renderPlayers() {
         if (sort === 'number') {
             return Number(a.number) - Number(b.number);
         }
-        return Number(b[sort] || 0) - Number(a[sort] || 0);
+        return a.name.localeCompare(b.name);
     });
 
     const table = document.getElementById('playersTable');
     if (!players.length) {
-        table.innerHTML = '<tr><td colspan="6"><div class="empty">Geen spelers gevonden.</div></td></tr>';
+        table.innerHTML = '<tr><td colspan="3"><div class="empty">Geen spelers gevonden.</div></td></tr>';
         return;
     }
 
@@ -127,28 +127,14 @@ function renderPlayers() {
 }
 
 function renderPlayerRow(player) {
-    let badges = '';
-    if (player.guest) {
-        badges += '<span class="badge guest">Gastspeler</span>';
-    }
-    if (player.yellow) {
-        badges += '<span class="badge yellow">🟨 ' + player.yellow + '</span>';
-    }
-    if (player.red) {
-        badges += '<span class="badge red">🟥 ' + player.red + '</span>';
-    }
-    if (!player.yellow && !player.red) {
-        badges += '—';
-    }
+    const foot = player.foot ? ' • ' + escapeHTML(player.foot) : '';
+    const guest = player.guest ? ' <span class="badge guest">Gastspeler</span>' : '';
 
     return '<tr>'
-        + '<td><div class="player"><div class="number">' + escapeHTML(player.number) + '</div><div><div class="player-name">'
-        + escapeHTML(player.name) + badges + '</div><span class="player-position">' + escapeHTML(player.position) + '</span></div></div></td>'
+        + '<td>' + escapeHTML(player.number || '—') + '</td>'
+        + '<td><div class="player"><div><div class="player-name">' + escapeHTML(player.name) + guest + '</div>'
+        + '<span class="player-position">' + escapeHTML(player.position || '—') + foot + '</span></div></div></td>'
         + '<td>' + escapeHTML(player.position || '—') + '</td>'
-        + '<td>' + escapeHTML(player.minutes) + '</td>'
-        + '<td><strong>' + escapeHTML(player.goals) + '</strong></td>'
-        + '<td>' + escapeHTML(player.assists) + '</td>'
-        + '<td>' + badges + '</td>'
         + '</tr>';
 }
 
@@ -159,10 +145,10 @@ function renderStaff() {
         container.innerHTML = '<div class="empty">Geen stafleden gevonden.</div>';
         return;
     }
-    container.innerHTML = data.staff.map(member =>
-        '<div class="staff-item"><div><div class="staff-name">' + escapeHTML(member.naam) + '</div>'
-        + '<div class="staff-role">' + escapeHTML(member.rol) + '</div></div></div>'
-    ).join('');
+
+    container.innerHTML = '<div class="table-wrapper"><table><tbody>'
+        + data.staff.map(member => '<tr><td>' + escapeHTML(member.naam) + '</td></tr>').join('')
+        + '</tbody></table></div>';
 }
 
 /* =====================================================
@@ -239,53 +225,64 @@ function renderStatistics() {
 
     const topScorers = [...data.players]
         .filter(player => Number(player.goals || 0) > 0)
-        .sort((a, b) => Number(b.goals || 0) - Number(a.goals || 0))
-        .slice(0, 6);
+        .sort((a, b) => Number(b.goals || 0) - Number(a.goals || 0));
 
     container.innerHTML = `
-        <div class="card chart-card">
+        <div class="card">
             <div class="card-header"><h3>Doelpunten per wedstrijd</h3></div>
             <div class="card-body">
-                ${goalsByMatch.length
-                    ? goalsByMatch.map(item => renderStatBar(item.label, item.value, 6)).join('')
-                    : '<div class="empty">Nog geen doelpunten.</div>' }
+                ${renderStatisticsTable(
+                    ['Wedstrijd', 'Doelpunten'],
+                    goalsByMatch.map(item => [item.label, item.value])
+                )}
             </div>
         </div>
 
-        <div class="card chart-card">
-            <div class="card-header"><h3>Kaarten trend</h3></div>
+        <div class="card">
+            <div class="card-header"><h3>Kaarten per wedstrijd</h3></div>
             <div class="card-body">
-                ${cardsTrend.length
-                    ? cardsTrend.map(item => `
-                        <div class="chart-row">
-                            <div class="chart-row-title">${escapeHTML(item.label)}</div>
-                            ${renderStatBar('Geel', item.yellow, 3, 'var(--yellow)')}
-                            ${renderStatBar('Rood', item.red, 2, 'var(--red)')}
-                        </div>
-                    `).join('')
-                    : '<div class="empty">Nog geen kaartgegevens.</div>' }
+                ${renderStatisticsTable(
+                    ['Wedstrijd', 'Geel', 'Rood'],
+                    cardsTrend.map(item => [item.label, item.yellow, item.red])
+                )}
             </div>
         </div>
 
-        <div class="card chart-card">
+        <div class="card">
             <div class="card-header"><h3>Assists per periode</h3></div>
             <div class="card-body">
-                ${Object.entries(assistsByPeriod).map(([period, value]) => renderStatBar(period, value, 6)).join('')}
+                ${renderStatisticsTable(
+                    ['Periode', 'Assists'],
+                    Object.entries(assistsByPeriod).map(([period, value]) => [period, value])
+                )}
             </div>
         </div>
 
-        <div class="card chart-card">
+        <div class="card">
             <div class="card-header"><h3>Topscorers</h3></div>
             <div class="card-body">
-                ${topScorers.length
-                    ? topScorers.map((player, index) => `
-                        <div class="stats-row"><strong>${index + 1}. ${escapeHTML(player.name)}</strong>
-                            <span class="stats-value-pill">${escapeHTML(player.goals)} doelpunt(en)</span>
-                        </div>
-                    `).join('')
-                    : '<div class="empty">Nog geen topscorers.</div>' }
+                ${renderStatisticsTable(
+                    ['Speler', 'Doelpunten'],
+                    topScorers.map(player => [player.name, player.goals || 0])
+                )}
             </div>
         </div>`;
+
+    populatePlayerComparisonOptions();
+    renderPlayerComparison();
+}
+
+function renderStatisticsTable(headers, rows) {
+    if (!rows.length) {
+        return '<div class="empty">Geen gegevens beschikbaar.</div>';
+    }
+
+    return '<div class="table-wrapper"><table><thead><tr>'
+        + headers.map(header => '<th>' + escapeHTML(header) + '</th>').join('')
+        + '</tr></thead><tbody>'
+        + rows.map(row => '<tr>' + row.map(cell => '<td>' + escapeHTML(cell) + '</td>').join('') + '</tr>').join('')
+        + '</tbody></table></div>';
+}
 
     populatePlayerComparisonOptions();
     renderPlayerComparison();
@@ -613,6 +610,7 @@ function buildPlayersFromMatchData(spelersData, wedstrijdenData) {
         number: s.rugnummer,
         name: s.naam,
         position: s.positie,
+        foot: s.voet || 'rechts',
         guest: Boolean(s.gastspeler),
         training: s.training ?? 0,
         trainingTotal: s.trainingTotaal ?? 0,
