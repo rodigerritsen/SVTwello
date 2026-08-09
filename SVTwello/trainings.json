@@ -1,0 +1,10 @@
+{
+  "trainings": [
+    {
+      "title": "Teamtraining",
+      "location": "Sportpark",
+      "weekday": "Thursday",
+      "time": "20:00"
+    }
+  ]
+}

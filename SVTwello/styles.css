@@ -346,6 +346,29 @@ td {
     text-align: left;
 }
 
+.calendar-event {
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: #fbfdff;
+    margin-bottom: 12px;
+}
+
+.calendar-date {
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.calendar-title {
+    font-size: 15px;
+    margin-bottom: 6px;
+}
+
+.calendar-meta {
+    color: var(--muted);
+    font-size: 13px;
+}
+
 th {
     background: #f5f8fc;
     color: var(--muted);

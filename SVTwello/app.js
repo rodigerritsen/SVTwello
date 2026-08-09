@@ -6,7 +6,8 @@ const defaultData = {
     players: [],
     matches: [],
     standings: [],
-    staff: []
+    staff: [],
+    trainings: []
 };
 
 let data;
@@ -297,6 +298,191 @@ function getGoalsByMatch(matches) {
         .map(match => ({ label: formatDate(match.date), value: match.events.length }));
 }
 
+function getAttendanceSummary() {
+    return data.players.map(player => {
+        const training = Number(player.training || 0);
+        const trainingTotal = Number(player.trainingTotal || 0);
+        const matchAttendance = Number(player.attendance || 0);
+        const matchTotal = Number(player.attendanceTotal || 0);
+
+        const values = [];
+        if (trainingTotal > 0) values.push(training / trainingTotal);
+        if (matchTotal > 0) values.push(matchAttendance / matchTotal);
+
+        const percent = values.length ? Math.round((values.reduce((sum, value) => sum + value, 0) / values.length) * 100) : 0;
+
+        return {
+            name: player.name,
+            training,
+            trainingTotal,
+            matchAttendance,
+            matchTotal,
+            percent
+        };
+    });
+}
+
+function renderAttendance() {
+    const table = document.getElementById('attendanceTable');
+    if (table) {
+        const rows = getAttendanceSummary().map(player => renderAttendanceRow(player));
+        table.innerHTML = rows.length
+            ? rows.join('')
+            : '<tr><td colspan="4"><div class="empty">Geen spelers gevonden.</div></td></tr>';
+    }
+
+    renderCalendar();
+}
+
+function renderAttendanceRow(player) {
+    return '<tr>'
+        + '<td>' + escapeHTML(player.name) + '</td>'
+        + '<td>' + escapeHTML(player.training) + ' / ' + escapeHTML(player.trainingTotal || '–') + '</td>'
+        + '<td>' + escapeHTML(player.matchAttendance) + ' / ' + escapeHTML(player.matchTotal || '–') + '</td>'
+        + '<td><strong>' + escapeHTML(player.percent) + '%</strong></td>'
+        + '</tr>';
+}
+
+function weekdayToNumber(weekday) {
+    const map = {
+        sunday: 0,
+        monday: 1,
+        tuesday: 2,
+        wednesday: 3,
+        thursday: 4,
+        friday: 5,
+        saturday: 6,
+        zondag: 0,
+        maandag: 1,
+        dinsdag: 2,
+        woensdag: 3,
+        donderdag: 4,
+        vrijdag: 5,
+        zaterdag: 6,
+        zo: 0,
+        ma: 1,
+        di: 2,
+        wo: 3,
+        do: 4,
+        vr: 5,
+        za: 6
+    };
+    return map[String(weekday || '').toLowerCase()] ?? null;
+}
+
+function getRecurringTrainingEvents(training, count = 4) {
+    const weekdayIndex = weekdayToNumber(training.weekday);
+    if (weekdayIndex === null) {
+        return [];
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const nextDate = new Date(today);
+    const diff = (weekdayIndex + 7 - nextDate.getDay()) % 7;
+    nextDate.setDate(nextDate.getDate() + diff);
+
+    const events = [];
+    for (let i = 0; i < count; i += 1) {
+        const eventDate = new Date(nextDate);
+        eventDate.setDate(nextDate.getDate() + i * 7);
+        events.push({
+            type: 'training',
+            date: eventDate.toISOString().split('T')[0],
+            time: training.time,
+            title: training.title,
+            location: training.location,
+            recurring: true
+        });
+    }
+    return events;
+}
+
+function getCalendarEvents() {
+    const trainingEvents = (data.trainings || []).flatMap(training => {
+        if (training.date) {
+            return [{
+                type: 'training',
+                date: training.date,
+                time: training.time,
+                title: training.title,
+                location: training.location
+            }];
+        }
+        return getRecurringTrainingEvents(training);
+    });
+
+    const matchEvents = data.matches.map(match => ({
+        type: 'match',
+        date: match.date,
+        time: match.time,
+        title: match.opponent,
+        location: match.location,
+        score: match.score
+    }));
+
+    return [...trainingEvents, ...matchEvents].sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
+}
+
+function renderCalendar() {
+    const container = document.getElementById('calendarList');
+    if (!container) return;
+
+    const events = getCalendarEvents();
+    if (!events.length) {
+        container.innerHTML = '<div class="empty">Geen kalenderitems gevonden.</div>';
+        return;
+    }
+
+    container.innerHTML = events.map(event => {
+        const title = event.type === 'training'
+            ? event.title + (event.recurring ? ' (wekelijkse training)' : '')
+            : 'Wedstrijd tegen ' + event.title;
+        const details = event.type === 'training'
+            ? 'Training • ' + escapeHTML(event.location)
+            : 'Wedstrijd • ' + escapeHTML(event.location) + ' • ' + escapeHTML(event.score || 'score nog onbekend');
+
+        return '<div class="calendar-event">'
+            + '<div class="calendar-date"><strong>' + formatDate(event.date) + '</strong> ' + escapeHTML(event.time || '') + '</div>'
+            + '<div class="calendar-title">' + escapeHTML(title) + '</div>'
+            + '<div class="calendar-meta">' + details + '</div>'
+            + '</div>';
+    }).join('');
+}
+
+function setupAttendanceControls() {
+    const button = document.getElementById('saveTrainingBtn');
+    if (!button) return;
+
+    button.addEventListener('click', () => {
+        const title = document.getElementById('trainingTitle')?.value.trim();
+        const location = document.getElementById('trainingLocation')?.value.trim();
+        const date = document.getElementById('trainingDate')?.value;
+        const time = document.getElementById('trainingTime')?.value;
+
+        if (!title || !date || !time) {
+            showToast('Vul titel, datum en tijd in.');
+            return;
+        }
+
+        data.trainings = data.trainings || [];
+        data.trainings.push({
+            id: Date.now(),
+            title,
+            location: location || 'Teamtraining',
+            date,
+            time
+        });
+
+        document.getElementById('trainingTitle').value = '';
+        document.getElementById('trainingLocation').value = '';
+        document.getElementById('trainingDate').value = '';
+        document.getElementById('trainingTime').value = '';
+
+        saveData();
+    });
+}
+
 function getCardsTrend(matches) {
     return [...matches]
         .sort((a, b) => a.date.localeCompare(b.date))
@@ -418,6 +604,7 @@ function renderAll() {
     renderPlayers();
     renderStaff();
     renderMatches();
+    renderAttendance();
     renderStatistics();
 }
 
@@ -502,8 +689,9 @@ loadData();
 Promise.all([
     fetch('wedstrijden.json').then(r => r.json()).catch(() => null),
     fetch('spelers.json').then(r => r.json()).catch(() => null),
-    fetch('speler-van-het-jaar.json').then(r => r.json()).catch(() => null)
-]).then(([wedstrijden, spelers, svhj]) => {
+    fetch('speler-van-het-jaar.json').then(r => r.json()).catch(() => null),
+    fetch('trainings.json').then(r => r.json()).catch(() => null)
+]).then(([wedstrijden, spelers, svhj, trainings]) => {
     if (wedstrijden?.wedstrijden) {
         data.matches = wedstrijden.wedstrijden.map(w => {
             const isThuis = w.thuis === 'SV Twello 2';
@@ -536,8 +724,13 @@ Promise.all([
     }
 
     data.staff = spelers?.staf || [];
+    data.trainings = trainings?.trainings || [];
     if (svhj?.winnaars) {
         renderSpelerVanHetJaar(svhj.winnaars);
     }
+    setupAttendanceControls();
     renderAll();
-}).catch(() => renderAll());
+}).catch(() => {
+    setupAttendanceControls();
+    renderAll();
+});

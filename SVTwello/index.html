@@ -50,6 +50,11 @@
         </button>
 
         <button class="nav-btn"
+                data-page="aanwezigheid">
+            Aanwezigheid
+        </button>
+
+        <button class="nav-btn"
                 data-page="statistieken">
             Statistieken
         </button>
@@ -337,6 +342,85 @@
     </div>
 
 </section>
+
+
+<!-- =====================================
+     AANWEZIGHEID
+====================================== -->
+
+<section id="aanwezigheid" class="page">
+
+    <div class="page-title">
+
+        <h2>Aanwezigheid</h2>
+
+        <p>
+            Trainings- en wedstrijdaanwezigheid bijhouden en teamkalender beheren.
+        </p>
+
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <div class="card-header">
+                <h3>Aanwezigheidsstatistiek</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Speler</th>
+                            <th>Training</th>
+                            <th>Wedstrijd</th>
+                            <th>% Aanw.</th>
+                        </tr>
+                        </thead>
+                        <tbody id="attendanceTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Teamkalender</h3>
+            </div>
+            <div class="card-body" id="calendarList"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Training toevoegen</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Naam training</label>
+                    <input id="trainingTitle" class="input" placeholder="Teamtraining" />
+                </div>
+                <div class="form-group">
+                    <label>Locatie</label>
+                    <input id="trainingLocation" class="input" placeholder="Sportpark" />
+                </div>
+                <div class="form-group">
+                    <label>Datum</label>
+                    <input id="trainingDate" class="input" type="date" />
+                </div>
+                <div class="form-group">
+                    <label>Tijd</label>
+                    <input id="trainingTime" class="input" type="time" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button id="saveTrainingBtn" class="btn green">Opslaan</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
 
 <!-- =====================================
      STATISTIEKEN
