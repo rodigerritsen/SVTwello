@@ -35,7 +35,7 @@ button {
 }
 
 header {
-    background: linear-gradient(135deg, var(--green-dark), var(--green));
+    background: var(--green);
     color: white;
     position: sticky;
     top: 0;
@@ -113,7 +113,7 @@ main {
 
 .hero {
     color: white;
-    background: linear-gradient(135deg, var(--green-dark), var(--green));
+    background: var(--green);
     padding: 30px;
     border-radius: 18px;
     margin-bottom: 20px;
