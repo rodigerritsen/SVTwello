@@ -2,7 +2,12 @@
   "team": "SV Twello 2",
   "seizoen": "2026/2027",
   "wedstrijden": [
-    { "id": "M623608225",  "datum": "2026-08-30", "tijd": "11:30", "thuis": "Voorwaarts T 5",       "uit": "SV Twello 2",          "uitslag": "0-2" },
+    { "id": "M623608225",  "datum": "2026-08-30", "tijd": "11:30", "thuis": "Voorwaarts T 5",       "uit": "SV Twello 2",          "uitslag": "0-2",
+      "doelpunten": [
+        { "speler": "Rodi Gerritsen", "assist": "Mike Willems", "minuut": 18 },
+        { "speler": "Rodi Gerritsen", "assist": "", "minuut": 74 }
+      ]
+    },
     { "id": "M669057056",  "datum": "2026-09-06", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "Columbia 3",           "uitslag": "" },
     { "id": "M1850179434", "datum": "2026-09-13", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "TKA 3",                "uitslag": "" },
     { "id": "M1515636623", "datum": "2026-09-20", "tijd": "10:00", "thuis": "Epse 2",                "uit": "SV Twello 2",          "uitslag": "" },

@@ -376,6 +376,25 @@ tbody tr:hover {
     box-shadow: var(--shadow);
 }
 
+.opponent-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.match-events {
+    font-size: 13px;
+    color: var(--muted);
+    display: grid;
+    gap: 4px;
+}
+
+.match-event {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
 .match-date {
     font-weight: 700;
 }
@@ -956,156 +975,11 @@ Teamdashboard
 
 const defaultData = {
 
-    players: [
+    players: [],
 
-        {
-            number: 1,
-            name: "Jan Jansen",
-            position: "Keeper",
-            training: 18,
-            trainingTotal: 20,
-            attendance: 15,
-            attendanceTotal: 18,
-            minutes: 1350,
-            maxMinutes: 1620,
-            goals: 0,
-            assists: 1,
-            yellow: 1,
-            red: 0
-        },
+    matches: [],
 
-        {
-            number: 9,
-            name: "Lars van Dijk",
-            position: "Aanvaller",
-            training: 19,
-            trainingTotal: 20,
-            attendance: 17,
-            attendanceTotal: 18,
-            minutes: 1495,
-            maxMinutes: 1620,
-            goals: 14,
-            assists: 7,
-            yellow: 1,
-            red: 0
-        },
-
-        {
-            number: 10,
-            name: "Mike Willems",
-            position: "Aanvaller",
-            training: 18,
-            trainingTotal: 20,
-            attendance: 16,
-            attendanceTotal: 18,
-            minutes: 1320,
-            maxMinutes: 1620,
-            goals: 11,
-            assists: 10,
-            yellow: 2,
-            red: 0
-        },
-
-        {
-            number: 6,
-            name: "Daan Meijer",
-            position: "Middenvelder",
-            training: 20,
-            trainingTotal: 20,
-            attendance: 18,
-            attendanceTotal: 18,
-            minutes: 1620,
-            maxMinutes: 1620,
-            goals: 7,
-            assists: 8,
-            yellow: 2,
-            red: 0
-        }
-
-    ],
-
-
-    matches: [
-
-        {
-            id: 1,
-            date: "2026-07-26",
-            time: "14:00",
-            opponent: "SV Apeldoorn",
-            location: "Uit",
-            competition: "Competitie",
-            score: "2 - 2"
-        },
-
-        {
-            id: 2,
-            date: "2026-08-02",
-            time: "14:00",
-            opponent: "FC Salland",
-            location: "Thuis",
-            competition: "Competitie",
-            score: "3 - 1"
-        },
-
-        {
-            id: 3,
-            date: "2026-08-16",
-            time: "14:00",
-            opponent: "SV Voorbeeld",
-            location: "Thuis",
-            competition: "Competitie",
-            score: ""
-        },
-
-        {
-            id: 4,
-            date: "2026-08-23",
-            time: "14:00",
-            opponent: "VV Voorbeeld",
-            location: "Uit",
-            competition: "Competitie",
-            score: ""
-        }
-
-    ],
-
-
-    standings: [
-
-        {
-            team: "SV Twello Zondag 2",
-            played: 2,
-            win: 1,
-            draw: 1,
-            loss: 0,
-            gf: 5,
-            ga: 3,
-            points: 4
-        },
-
-        {
-            team: "FC Deventer 2",
-            played: 2,
-            win: 1,
-            draw: 1,
-            loss: 0,
-            gf: 4,
-            ga: 2,
-            points: 4
-        },
-
-        {
-            team: "VV Voorbeeld 2",
-            played: 2,
-            win: 1,
-            draw: 0,
-            loss: 1,
-            gf: 4,
-            ga: 4,
-            points: 3
-        }
-
-    ]
+    standings: []
 
 };
 
@@ -1681,24 +1555,40 @@ function matchHTML(m) {
             </div>
 
 
-            <div class="opponent">
+            <div class="opponent-info">
 
-                <div class="opponent-logo">
-                    ${initials}
+                <div class="opponent">
+
+                    <div class="opponent-logo">
+                        ${initials}
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            ${escapeHTML(m.opponent)}
+                        </strong>
+
+                        <span>
+                            ${m.location} •
+                            ${escapeHTML(m.competition)}
+                        </span>
+
+                    </div>
+
                 </div>
 
-                <div>
-
-                    <strong>
-                        ${escapeHTML(m.opponent)}
-                    </strong>
-
-                    <span>
-                        ${m.location} •
-                        ${escapeHTML(m.competition)}
-                    </span>
-
-                </div>
+                ${m.events?.length ? `
+                    <div class="match-events">
+                        ${m.events.map(event => `
+                            <div class="match-event">
+                                ⚽ ${escapeHTML(event.scorer)}
+                                ${event.assist ? `• assist: ${escapeHTML(event.assist)}` : ""}
+                                ${event.minute ? `• ${escapeHTML(event.minute)}'` : ""}
+                            </div>
+                        `).join("")}
+                    </div>
+                ` : ""}
 
             </div>
 
@@ -1828,6 +1718,101 @@ function renderAll() {
 }
 
 
+function buildPlayersFromMatchData(spelersData, wedstrijdenData) {
+
+    const players = (spelersData?.spelers || []).map(s => ({
+        number:          s.rugnummer,
+        name:            s.naam,
+        position:        s.positie,
+        training:        s.training        ?? 0,
+        trainingTotal:   s.trainingTotaal  ?? 0,
+        attendance:      s.wedstrijden     ?? 0,
+        attendanceTotal: s.wedstrijdenTotaal ?? 0,
+        minutes:         s.minuten         ?? 0,
+        maxMinutes:      s.minutenMax      ?? 0,
+        goals:           s.doelpunten      ?? 0,
+        assists:         s.assists         ?? 0,
+        yellow:          s.geelKaarten     ?? 0,
+        red:             s.roodKaarten     ?? 0
+    }));
+
+    const playersByName = new Map();
+
+    players.forEach(player => {
+        playersByName.set(
+            player.name.toLowerCase(),
+            player
+        );
+    });
+
+    (wedstrijdenData?.wedstrijden || []).forEach(w => {
+
+        const events = w.doelpunten || [];
+
+        events.forEach(event => {
+
+            const scorerName = String(event.speler || event.scorer || "").trim();
+            const assistName = String(event.assist || event.assistPlayer || "").trim();
+
+            if (!scorerName) return;
+
+            const key = scorerName.toLowerCase();
+
+            if (!playersByName.has(key)) {
+                playersByName.set(key, {
+                    number: playersByName.size + 1,
+                    name: scorerName,
+                    position: "Speler",
+                    training: 0,
+                    trainingTotal: 0,
+                    attendance: 0,
+                    attendanceTotal: 0,
+                    minutes: 0,
+                    maxMinutes: 0,
+                    goals: 0,
+                    assists: 0,
+                    yellow: 0,
+                    red: 0
+                });
+            }
+
+            const scorer = playersByName.get(key);
+            scorer.goals = Number(scorer.goals || 0) + 1;
+
+            if (assistName) {
+                const assistKey = assistName.toLowerCase();
+
+                if (!playersByName.has(assistKey)) {
+                    playersByName.set(assistKey, {
+                        number: playersByName.size + 1,
+                        name: assistName,
+                        position: "Speler",
+                        training: 0,
+                        trainingTotal: 0,
+                        attendance: 0,
+                        attendanceTotal: 0,
+                        minutes: 0,
+                        maxMinutes: 0,
+                        goals: 0,
+                        assists: 0,
+                        yellow: 0,
+                        red: 0
+                    });
+                }
+
+                const assistPlayer = playersByName.get(assistKey);
+                assistPlayer.assists = Number(assistPlayer.assists || 0) + 1;
+            }
+
+        });
+
+    });
+
+    return Array.from(playersByName.values());
+
+}
+
+
 /* =====================================================
    INITIALISATIE
 ===================================================== */
@@ -1845,6 +1830,12 @@ Promise.all([
         // Vertaal het veld-formaat van wedstrijden.json naar intern formaat
         data.matches = wedstrijden.wedstrijden.map(w => {
             const isThuis = w.thuis === "SV Twello 2";
+            const events = (w.doelpunten || []).map(event => ({
+                scorer: event.speler || event.scorer || "",
+                assist: event.assist || event.assistPlayer || "",
+                minute: event.minuut || event.minute || ""
+            }));
+
             return {
                 id: w.id,
                 date: w.datum,
@@ -1852,28 +1843,14 @@ Promise.all([
                 opponent: isThuis ? w.uit : w.thuis,
                 location: isThuis ? "Thuis" : "Uit",
                 competition: "Competitie",
-                score: w.uitslag || ""
+                score: w.uitslag || "",
+                events
             };
         });
     }
 
-    if (spelers?.spelers?.length) {
-        // Vertaal veld-formaat van spelers.json naar intern formaat
-        data.players = spelers.spelers.map(s => ({
-            number:          s.rugnummer,
-            name:            s.naam,
-            position:        s.positie,
-            training:        s.training        ?? 0,
-            trainingTotal:   s.trainingTotaal  ?? 0,
-            attendance:      s.wedstrijden     ?? 0,
-            attendanceTotal: s.wedstrijdenTotaal ?? 0,
-            minutes:         s.minuten         ?? 0,
-            maxMinutes:      s.minutenMax      ?? 0,
-            goals:           s.doelpunten      ?? 0,
-            assists:         s.assists         ?? 0,
-            yellow:          s.geelKaarten     ?? 0,
-            red:             s.roodKaarten     ?? 0
-        }));
+    if (spelers?.spelers?.length || wedstrijden?.wedstrijden) {
+        data.players = buildPlayersFromMatchData(spelers, wedstrijden);
     }
 
     if (svhj?.winnaars) {
