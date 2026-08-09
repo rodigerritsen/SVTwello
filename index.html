@@ -1,0 +1,4056 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08783f">
+<title>SV Twello Zondag 2</title>
+
+<style>
+:root {
+    --green: #08783f;
+    --green-dark: #04552d;
+    --green-light: #e8f7ef;
+    --white: #fff;
+    --bg: #f3f6f4;
+    --text: #17231d;
+    --muted: #718078;
+    --border: #dfe7e2;
+    --red: #d64545;
+    --yellow: #e4b83d;
+    --blue: #3977d6;
+    --shadow: 0 8px 25px rgba(0,0,0,.07);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+header {
+    background: linear-gradient(
+        135deg,
+        var(--green-dark),
+        var(--green)
+    );
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 3px 18px rgba(0,0,0,.15);
+}
+
+.header-inner {
+    max-width: 1450px;
+    margin: auto;
+    padding: 14px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: white;
+    color: var(--green);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    font-weight: 900;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.brand h1 {
+    margin: 0;
+    font-size: 21px;
+}
+
+.brand small {
+    opacity: .8;
+}
+
+nav {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+}
+
+nav button {
+    color: white;
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    padding: 9px 12px;
+    white-space: nowrap;
+}
+
+nav button:hover,
+nav button.active {
+    background: rgba(255,255,255,.16);
+}
+
+main {
+    max-width: 1450px;
+    margin: auto;
+    padding: 25px 22px 60px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.hero {
+    color: white;
+    background: linear-gradient(
+        135deg,
+        var(--green-dark),
+        var(--green)
+    );
+    padding: 30px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+
+.hero h2 {
+    margin: 0 0 7px;
+    font-size: 30px;
+}
+
+.hero p {
+    margin: 0;
+    opacity: .85;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.stat-value {
+    margin-top: 6px;
+    color: var(--green);
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1.3fr .7fr;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 17px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-header h3 {
+    margin: 0;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.page-title {
+    margin-bottom: 20px;
+}
+
+.page-title h2 {
+    margin: 0;
+    font-size: 29px;
+}
+
+.page-title p {
+    color: var(--muted);
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.input,
+.select {
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 9px;
+    padding: 10px 12px;
+    outline: none;
+}
+
+.input:focus,
+.select:focus {
+    border-color: var(--green);
+}
+
+.btn {
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    background: var(--green);
+    color: white;
+    font-weight: 700;
+}
+
+.btn:hover {
+    background: var(--green-dark);
+}
+
+.btn.secondary {
+    background: #edf2ef;
+    color: var(--green-dark);
+}
+
+.btn.danger {
+    background: var(--red);
+}
+
+.btn.blue {
+    background: var(--blue);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+}
+
+th {
+    background: #f7faf8;
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+tbody tr:hover {
+    background: #f8fbf9;
+}
+
+.player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 180px;
+}
+
+.number {
+    width: 33px;
+    height: 33px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: var(--green-light);
+    color: var(--green-dark);
+    font-weight: 800;
+}
+
+.player-name {
+    font-weight: 700;
+}
+
+.player-position {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.progress {
+    width: 100px;
+    height: 7px;
+    background: #e5ebe7;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--green);
+}
+
+.badge {
+    display: inline-block;
+    border-radius: 99px;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.badge.green {
+    background: #e3f5ea;
+    color: #086333;
+}
+
+.badge.yellow {
+    background: #fff3c8;
+    color: #816000;
+}
+
+.badge.red {
+    background: #fde7e7;
+    color: #a62626;
+}
+
+.matches {
+    display: grid;
+    gap: 12px;
+}
+
+.match {
+    display: grid;
+    grid-template-columns: 110px 1fr 110px;
+    align-items: center;
+    gap: 15px;
+    padding: 17px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    box-shadow: var(--shadow);
+}
+
+.match-date {
+    font-weight: 700;
+}
+
+.match-date small {
+    display: block;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+.opponent {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.opponent-logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--green-light);
+    color: var(--green-dark);
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.opponent span {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.score {
+    text-align: right;
+    font-weight: 900;
+    font-size: 20px;
+}
+
+.score.win {
+    color: var(--green);
+}
+
+.score.draw {
+    color: var(--yellow);
+}
+
+.score.loss {
+    color: var(--red);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: rgba(0,0,0,.58);
+    place-items: center;
+    padding: 20px;
+}
+
+.modal.show {
+    display: grid;
+}
+
+.modal-content {
+    background: white;
+    width: min(750px,100%);
+    max-height: 92vh;
+    overflow-y: auto;
+    border-radius: 16px;
+}
+
+.modal-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+}
+
+.close {
+    border: 0;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group.full {
+    grid-column: 1/-1;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group select {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.admin-banner {
+    background: #102019;
+    color: white;
+    padding: 12px 20px;
+    display: none;
+}
+
+.admin-banner.show {
+    display: block;
+}
+
+.admin-inner {
+    max-width: 1450px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-label {
+    font-weight: 700;
+}
+
+.login-box {
+    width: min(420px,100%);
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+}
+
+.login-box h2 {
+    margin-top: 0;
+}
+
+.login-error {
+    display: none;
+    color: var(--red);
+    background: #fde8e8;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+.login-error.show {
+    display: block;
+}
+
+.admin-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.admin-tab {
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 8px;
+    padding: 9px 13px;
+    font-weight: 700;
+}
+
+.admin-tab.active {
+    color: white;
+    background: var(--green);
+}
+
+.admin-section {
+    display: none;
+}
+
+.admin-section.active {
+    display: block;
+}
+
+.empty {
+    padding: 35px;
+    text-align: center;
+    color: var(--muted);
+}
+
+footer {
+    background: #102019;
+    color: white;
+    text-align: center;
+    padding: 25px;
+    font-size: 13px;
+}
+
+footer span {
+    opacity: .65;
+}
+
+.toast {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
+    background: #102019;
+    color: white;
+    padding: 13px 17px;
+    border-radius: 9px;
+    display: none;
+    box-shadow: var(--shadow);
+}
+
+.toast.show {
+    display: block;
+}
+
+@media(max-width:1000px) {
+    .stats-grid {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width:700px) {
+    .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav {
+        width: 100%;
+    }
+
+    main {
+        padding: 18px 12px 45px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2,1fr);
+        gap: 10px;
+    }
+
+    .hero {
+        padding: 22px;
+    }
+
+    .hero h2 {
+        font-size: 25px;
+    }
+
+    .match {
+        grid-template-columns: 1fr auto;
+    }
+
+    .match-date {
+        grid-column: 1/-1;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+<header>
+
+<div class="header-inner">
+
+    <div class="brand">
+
+        <div class="logo">
+            SV<br>TWELLO
+        </div>
+
+        <div>
+            <h1>SV Twello Zondag 2</h1>
+            <small>Teamdashboard</small>
+        </div>
+
+    </div>
+
+
+    <nav>
+
+        <button class="nav-btn active"
+                data-page="dashboard">
+            Dashboard
+        </button>
+
+        <button class="nav-btn"
+                data-page="spelers">
+            Spelers
+        </button>
+
+        <button class="nav-btn"
+                data-page="wedstrijden">
+            Wedstrijden
+        </button>
+
+        <button class="nav-btn"
+                data-page="competitie">
+            Competitie
+        </button>
+
+        <button class="nav-btn"
+                data-page="admin"
+                id="adminNav">
+            Admin
+        </button>
+
+    </nav>
+
+</div>
+
+</header>
+
+
+<div class="admin-banner" id="adminBanner">
+
+<div class="admin-inner">
+
+    <span class="admin-label">
+        🔐 Adminmodus actief
+    </span>
+
+    <button class="btn secondary"
+            onclick="logout()">
+        Uitloggen
+    </button>
+
+</div>
+
+</div>
+
+
+<main>
+
+
+<!-- =====================================
+     DASHBOARD
+====================================== -->
+
+<section id="dashboard" class="page active">
+
+    <div class="hero">
+
+        <h2>SV Twello Zondag 2</h2>
+
+        <p>
+            Spelers, trainingen, wedstrijden en
+            competitiestatistieken.
+        </p>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+        <div class="stat">
+            <div class="stat-label">Selectie</div>
+            <div class="stat-value"
+                 id="statPlayers">
+                0
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">Wedstrijden</div>
+            <div class="stat-value"
+                 id="statMatches">
+                0
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">Doelpunten</div>
+            <div class="stat-value"
+                 id="statGoals">
+                0
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">Gem. speelpercentage</div>
+            <div class="stat-value"
+                 id="statPercentage">
+                0%
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="grid-2">
+
+        <div class="card">
+
+            <div class="card-header">
+                <h3>Wedstrijden</h3>
+
+                <button class="btn secondary"
+                        onclick="showPage('wedstrijden')">
+                    Alles
+                </button>
+            </div>
+
+            <div class="card-body">
+
+                <div class="matches"
+                     id="dashboardMatches">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-header">
+                <h3>Topscorers</h3>
+            </div>
+
+            <div class="card-body">
+
+                <div id="topScorers"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     SPELERS
+====================================== -->
+
+<section id="spelers" class="page">
+
+    <div class="page-title">
+
+        <h2>Spelers</h2>
+
+        <p>
+            Overzicht van de actuele spelersstatistieken.
+        </p>
+
+    </div>
+
+
+    <div class="toolbar">
+
+        <input
+            id="playerSearch"
+            class="input"
+            placeholder="Zoek speler..."
+        >
+
+        <select id="positionFilter"
+                class="select">
+
+            <option value="all">
+                Alle posities
+            </option>
+
+            <option value="Keeper">
+                Keeper
+            </option>
+
+            <option value="Verdediger">
+                Verdediger
+            </option>
+
+            <option value="Middenvelder">
+                Middenvelder
+            </option>
+
+            <option value="Aanvaller">
+                Aanvaller
+            </option>
+
+        </select>
+
+        <select id="sortPlayers"
+                class="select">
+
+            <option value="number">
+                Rugnummer
+            </option>
+
+            <option value="minutes">
+                Speelminuten
+            </option>
+
+            <option value="goals">
+                Doelpunten
+            </option>
+
+            <option value="assists">
+                Assists
+            </option>
+
+            <option value="percentage">
+                Speelpercentage
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                <tr>
+                    <th>Speler</th>
+                    <th>Training</th>
+                    <th>Wedstrijd</th>
+                    <th>Speelpercentage</th>
+                    <th>Minuten</th>
+                    <th>Goals</th>
+                    <th>Assists</th>
+                    <th>Kaarten</th>
+                    <th></th>
+                </tr>
+
+                </thead>
+
+                <tbody id="playersTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     WEDSTRIJDEN
+====================================== -->
+
+<section id="wedstrijden" class="page">
+
+    <div class="page-title">
+
+        <h2>Wedstrijden</h2>
+
+        <p>
+            Programma en gespeelde wedstrijden.
+        </p>
+
+    </div>
+
+
+    <div class="toolbar">
+
+        <select id="matchFilter"
+                class="select">
+
+            <option value="all">
+                Alle wedstrijden
+            </option>
+
+            <option value="played">
+                Gespeeld
+            </option>
+
+            <option value="upcoming">
+                Komend
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="matches"
+         id="matchesList">
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     COMPETITIE
+====================================== -->
+
+<section id="competitie" class="page">
+
+    <div class="page-title">
+
+        <h2>Competitie</h2>
+
+        <p>
+            Actuele stand van de competitie.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                <tr>
+                    <th>#</th>
+                    <th>Team</th>
+                    <th>GS</th>
+                    <th>W</th>
+                    <th>G</th>
+                    <th>V</th>
+                    <th>DV</th>
+                    <th>DT</th>
+                    <th>DS</th>
+                    <th>P</th>
+                </tr>
+
+                </thead>
+
+                <tbody id="standingsTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     ADMIN
+====================================== -->
+
+<section id="admin" class="page">
+
+    <div id="loginView">
+
+        <div class="page-title">
+
+            <h2>Adminomgeving</h2>
+
+            <p>
+                Log in om spelers, wedstrijden en
+                competitiegegevens te beheren.
+            </p>
+
+        </div>
+
+
+        <div class="login-box">
+
+            <h2>🔐 Admin login</h2>
+
+            <div class="form-group">
+
+                <label>
+                    Wachtwoord
+                </label>
+
+                <input
+                    id="adminPassword"
+                    type="password"
+                    placeholder="Wachtwoord"
+                >
+
+            </div>
+
+            <br>
+
+            <button class="btn"
+                    onclick="login()">
+                Inloggen
+            </button>
+
+            <div class="login-error"
+                 id="loginError">
+                Onjuist wachtwoord.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div id="adminView"
+         style="display:none;">
+
+        <div class="page-title">
+
+            <h2>Beheeromgeving</h2>
+
+            <p>
+                Beheer hier alle gegevens van SV Twello Zondag 2.
+            </p>
+
+        </div>
+
+
+        <div class="admin-tabs">
+
+            <button class="admin-tab active"
+                    data-admin="adminPlayers">
+                Spelers
+            </button>
+
+            <button class="admin-tab"
+                    data-admin="adminMatches">
+                Wedstrijden
+            </button>
+
+            <button class="admin-tab"
+                    data-admin="adminStandings">
+                Competitie
+            </button>
+
+            <button class="admin-tab"
+                    data-admin="adminData">
+                Data
+            </button>
+
+        </div>
+
+
+        <!-- ADMIN PLAYERS -->
+
+        <div class="admin-section active"
+             id="adminPlayers">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>Spelers beheren</h3>
+
+                    <button class="btn"
+                            onclick="openPlayerForm()">
+                        + Speler toevoegen
+                    </button>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>#</th>
+                            <th>Naam</th>
+                            <th>Positie</th>
+                            <th>Training</th>
+                            <th>Wedstrijden</th>
+                            <th>Minuten</th>
+                            <th>Goals</th>
+                            <th>Actie</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="adminPlayersTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ADMIN MATCHES -->
+
+        <div class="admin-section"
+             id="adminMatches">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>Wedstrijden beheren</h3>
+
+                    <button class="btn"
+                            onclick="openMatchForm()">
+                        + Wedstrijd toevoegen
+                    </button>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>Datum</th>
+                            <th>Tijd</th>
+                            <th>Tegenstander</th>
+                            <th>Thuis/uit</th>
+                            <th>Uitslag</th>
+                            <th>Actie</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="adminMatchesTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ADMIN STANDINGS -->
+
+        <div class="admin-section"
+             id="adminStandings">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>Competitiestand</h3>
+
+                    <button class="btn"
+                            onclick="openTeamForm()">
+                        + Team toevoegen
+                    </button>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>Team</th>
+                            <th>GS</th>
+                            <th>W</th>
+                            <th>G</th>
+                            <th>V</th>
+                            <th>DV</th>
+                            <th>DT</th>
+                            <th>P</th>
+                            <th>Actie</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="adminStandingsTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ADMIN DATA -->
+
+        <div class="admin-section"
+             id="adminData">
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h3>Gegevensbeheer</h3>
+                </div>
+
+                <div class="card-body">
+
+                    <p>
+                        Maak een backup van alle gegevens of
+                        zet eerder opgeslagen gegevens terug.
+                    </p>
+
+                    <div class="toolbar">
+
+                        <button class="btn"
+                                onclick="exportData()">
+                            Export JSON
+                        </button>
+
+                        <label class="btn blue">
+                            Import JSON
+                            <input
+                                id="importFile"
+                                type="file"
+                                accept=".json"
+                                hidden
+                            >
+                        </label>
+
+                        <button class="btn danger"
+                                onclick="resetData()">
+                            Alles resetten
+                        </button>
+
+                    </div>
+
+                    <p style="color:var(--muted);font-size:13px">
+                        De gegevens worden lokaal in deze browser
+                        opgeslagen via localStorage.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+<strong>SV Twello Zondag 2</strong>
+
+<br>
+
+<span>
+Teamdashboard
+</span>
+
+</footer>
+
+
+<!-- =====================================
+     PLAYER FORM MODAL
+====================================== -->
+
+<div class="modal"
+     id="playerFormModal">
+
+<div class="modal-content">
+
+    <div class="modal-header">
+
+        <h3 id="playerFormTitle">
+            Speler toevoegen
+        </h3>
+
+        <button class="close"
+                onclick="closeModal('playerFormModal')">
+            ×
+        </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+        <input type="hidden"
+               id="editPlayerNumber">
+
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>Rugnummer</label>
+
+                <input
+                    id="formNumber"
+                    type="number"
+                    min="1"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Naam</label>
+
+                <input
+                    id="formName"
+                    type="text"
+                    placeholder="Voor- en achternaam"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Positie</label>
+
+                <select id="formPosition">
+
+                    <option>Keeper</option>
+                    <option>Verdediger</option>
+                    <option>Middenvelder</option>
+                    <option>Aanvaller</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Trainingen aanwezig</label>
+
+                <input
+                    id="formTraining"
+                    type="number"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Totaal trainingen</label>
+
+                <input
+                    id="formTrainingTotal"
+                    type="number"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Wedstrijden aanwezig</label>
+
+                <input
+                    id="formAttendance"
+                    type="number"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Totaal wedstrijden</label>
+
+                <input
+                    id="formAttendanceTotal"
+                    type="number"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Speelminuten</label>
+
+                <input
+                    id="formMinutes"
+                    type="number"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Max. speelminuten</label>
+
+                <input
+                    id="formMaxMinutes"
+                    type="number"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Doelpunten</label>
+
+                <input
+                    id="formGoals"
+                    type="number"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Assists</label>
+
+                <input
+                    id="formAssists"
+                    type="number"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Gele kaarten</label>
+
+                <input
+                    id="formYellow"
+                    type="number"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Rode kaarten</label>
+
+                <input
+                    id="formRed"
+                    type="number"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button class="btn secondary"
+                    onclick="closeModal('playerFormModal')">
+                Annuleren
+            </button>
+
+            <button class="btn"
+                    onclick="savePlayer()">
+                Opslaan
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================
+     MATCH FORM
+====================================== -->
+
+<div class="modal"
+     id="matchFormModal">
+
+<div class="modal-content">
+
+    <div class="modal-header">
+
+        <h3>Wedstrijd</h3>
+
+        <button class="close"
+                onclick="closeModal('matchFormModal')">
+            ×
+        </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+        <input type="hidden"
+               id="editMatchId">
+
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>Datum</label>
+
+                <input
+                    id="matchDate"
+                    type="date"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Tijd</label>
+
+                <input
+                    id="matchTime"
+                    type="time"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Tegenstander</label>
+
+                <input
+                    id="matchOpponent"
+                    type="text"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Thuis / Uit</label>
+
+                <select id="matchLocation">
+
+                    <option>Thuis</option>
+                    <option>Uit</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Competitie</label>
+
+                <input
+                    id="matchCompetition"
+                    value="Competitie"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Uitslag</label>
+
+                <input
+                    id="matchScore"
+                    placeholder="bijv. 3 - 1"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button class="btn secondary"
+                    onclick="closeModal('matchFormModal')">
+                Annuleren
+            </button>
+
+            <button class="btn"
+                    onclick="saveMatch()">
+                Opslaan
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================
+     TEAM FORM
+====================================== -->
+
+<div class="modal"
+     id="teamFormModal">
+
+<div class="modal-content">
+
+    <div class="modal-header">
+
+        <h3>Team toevoegen</h3>
+
+        <button class="close"
+                onclick="closeModal('teamFormModal')">
+            ×
+        </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+        <div class="form-grid">
+
+            <div class="form-group full">
+
+                <label>Teamnaam</label>
+
+                <input
+                    id="teamName"
+                    type="text"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+                <label>Gespeeld</label>
+                <input id="teamPlayed"
+                       type="number"
+                       min="0"
+                       value="0">
+            </div>
+
+            <div class="form-group">
+                <label>Winst</label>
+                <input id="teamWin"
+                       type="number"
+                       min="0"
+                       value="0">
+            </div>
+
+            <div class="form-group">
+                <label>Gelijk</label>
+                <input id="teamDraw"
+                       type="number"
+                       min="0"
+                       value="0">
+            </div>
+
+            <div class="form-group">
+                <label>Verlies</label>
+                <input id="teamLoss"
+                       type="number"
+                       min="0"
+                       value="0">
+            </div>
+
+            <div class="form-group">
+                <label>Doelpunten voor</label>
+                <input id="teamGF"
+                       type="number"
+                       min="0"
+                       value="0">
+            </div>
+
+            <div class="form-group">
+                <label>Doelpunten tegen</label>
+                <input id="teamGA"
+                       type="number"
+                       min="0"
+                       value="0">
+            </div>
+
+            <div class="form-group">
+                <label>Punten</label>
+                <input id="teamPoints"
+                       type="number"
+                       min="0"
+                       value="0">
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button class="btn secondary"
+                    onclick="closeModal('teamFormModal')">
+                Annuleren
+            </button>
+
+            <button class="btn"
+                    onclick="saveTeam()">
+                Opslaan
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<div class="toast"
+     id="toast">
+    Opgeslagen
+</div>
+
+
+<script>
+/* =====================================================
+   INSTELLINGEN
+===================================================== */
+
+/*
+    LET OP:
+    Dit wachtwoord is alleen geschikt voor een lokaal
+    prototype. Voor een echte website moet authenticatie
+    server-side worden geregeld.
+
+    Wijzig dit wachtwoord voordat je het prototype gebruikt.
+*/
+
+const ADMIN_PASSWORD = "Twello2!";
+
+
+/* =====================================================
+   STARTDATA
+===================================================== */
+
+const defaultData = {
+
+    players: [
+
+        {
+            number: 1,
+            name: "Jan Jansen",
+            position: "Keeper",
+            training: 18,
+            trainingTotal: 20,
+            attendance: 15,
+            attendanceTotal: 18,
+            minutes: 1350,
+            maxMinutes: 1620,
+            goals: 0,
+            assists: 1,
+            yellow: 1,
+            red: 0
+        },
+
+        {
+            number: 9,
+            name: "Lars van Dijk",
+            position: "Aanvaller",
+            training: 19,
+            trainingTotal: 20,
+            attendance: 17,
+            attendanceTotal: 18,
+            minutes: 1495,
+            maxMinutes: 1620,
+            goals: 14,
+            assists: 7,
+            yellow: 1,
+            red: 0
+        },
+
+        {
+            number: 10,
+            name: "Mike Willems",
+            position: "Aanvaller",
+            training: 18,
+            trainingTotal: 20,
+            attendance: 16,
+            attendanceTotal: 18,
+            minutes: 1320,
+            maxMinutes: 1620,
+            goals: 11,
+            assists: 10,
+            yellow: 2,
+            red: 0
+        },
+
+        {
+            number: 6,
+            name: "Daan Meijer",
+            position: "Middenvelder",
+            training: 20,
+            trainingTotal: 20,
+            attendance: 18,
+            attendanceTotal: 18,
+            minutes: 1620,
+            maxMinutes: 1620,
+            goals: 7,
+            assists: 8,
+            yellow: 2,
+            red: 0
+        }
+
+    ],
+
+
+    matches: [
+
+        {
+            id: 1,
+            date: "2026-07-26",
+            time: "14:00",
+            opponent: "SV Apeldoorn",
+            location: "Uit",
+            competition: "Competitie",
+            score: "2 - 2"
+        },
+
+        {
+            id: 2,
+            date: "2026-08-02",
+            time: "14:00",
+            opponent: "FC Salland",
+            location: "Thuis",
+            competition: "Competitie",
+            score: "3 - 1"
+        },
+
+        {
+            id: 3,
+            date: "2026-08-16",
+            time: "14:00",
+            opponent: "SV Voorbeeld",
+            location: "Thuis",
+            competition: "Competitie",
+            score: ""
+        },
+
+        {
+            id: 4,
+            date: "2026-08-23",
+            time: "14:00",
+            opponent: "VV Voorbeeld",
+            location: "Uit",
+            competition: "Competitie",
+            score: ""
+        }
+
+    ],
+
+
+    standings: [
+
+        {
+            team: "SV Twello Zondag 2",
+            played: 2,
+            win: 1,
+            draw: 1,
+            loss: 0,
+            gf: 5,
+            ga: 3,
+            points: 4
+        },
+
+        {
+            team: "FC Deventer 2",
+            played: 2,
+            win: 1,
+            draw: 1,
+            loss: 0,
+            gf: 4,
+            ga: 2,
+            points: 4
+        },
+
+        {
+            team: "VV Voorbeeld 2",
+            played: 2,
+            win: 1,
+            draw: 0,
+            loss: 1,
+            gf: 4,
+            ga: 4,
+            points: 3
+        }
+
+    ]
+
+};
+
+
+/* =====================================================
+   LOCAL STORAGE
+===================================================== */
+
+let data;
+
+
+function loadData() {
+
+    const saved =
+        localStorage.getItem("svTwelloZondag2");
+
+    if (saved) {
+
+        try {
+
+            data = JSON.parse(saved);
+
+        } catch {
+
+            data = structuredClone(defaultData);
+
+        }
+
+    } else {
+
+        data = structuredClone(defaultData);
+
+    }
+
+}
+
+
+function saveData() {
+
+    localStorage.setItem(
+        "svTwelloZondag2",
+        JSON.stringify(data)
+    );
+
+    showToast("Gegevens opgeslagen");
+
+    renderAll();
+
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+let isAdmin = false;
+
+
+function login() {
+
+    const password =
+        document.getElementById("adminPassword").value;
+
+    if (password === ADMIN_PASSWORD) {
+
+        isAdmin = true;
+
+        sessionStorage.setItem(
+            "svTwelloAdmin",
+            "true"
+        );
+
+        document
+            .getElementById("loginError")
+            .classList.remove("show");
+
+        updateAdminUI();
+
+        showToast("Ingelogd als administrator");
+
+    } else {
+
+        document
+            .getElementById("loginError")
+            .classList.add("show");
+
+    }
+
+}
+
+
+function logout() {
+
+    isAdmin = false;
+
+    sessionStorage.removeItem(
+        "svTwelloAdmin"
+    );
+
+    updateAdminUI();
+
+    showPage("dashboard");
+
+    showToast("Uitgelogd");
+
+}
+
+
+function checkLogin() {
+
+    isAdmin =
+        sessionStorage.getItem(
+            "svTwelloAdmin"
+        ) === "true";
+
+    updateAdminUI();
+
+}
+
+
+function updateAdminUI() {
+
+    const loginView =
+        document.getElementById("loginView");
+
+    const adminView =
+        document.getElementById("adminView");
+
+    const banner =
+        document.getElementById("adminBanner");
+
+    if (isAdmin) {
+
+        loginView.style.display = "none";
+        adminView.style.display = "block";
+        banner.classList.add("show");
+
+    } else {
+
+        loginView.style.display = "block";
+        adminView.style.display = "none";
+        banner.classList.remove("show");
+
+    }
+
+}
+
+
+/* =====================================================
+   NAVIGATIE
+===================================================== */
+
+document
+    .querySelectorAll(".nav-btn")
+    .forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            const page =
+                button.dataset.page;
+
+            if (page === "admin" && !isAdmin) {
+
+                showPage("admin");
+
+                return;
+
+            }
+
+            showPage(page);
+
+        });
+
+    });
+
+
+function showPage(pageName) {
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page => {
+            page.classList.remove("active");
+        });
+
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(button => {
+            button.classList.remove("active");
+        });
+
+
+    const page =
+        document.getElementById(pageName);
+
+    if (page) {
+        page.classList.add("active");
+    }
+
+
+    const nav =
+        document.querySelector(
+            `.nav-btn[data-page="${pageName}"]`
+        );
+
+    if (nav) {
+        nav.classList.add("active");
+    }
+
+}
+
+
+/* =====================================================
+   SPEELPERCENTAGE
+===================================================== */
+
+function getPercentage(player) {
+
+    if (!player.maxMinutes ||
+        player.maxMinutes <= 0) {
+
+        return 0;
+
+    }
+
+    return Math.min(
+        100,
+        Math.round(
+            (player.minutes /
+             player.maxMinutes) * 100
+        )
+    );
+
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+function renderDashboard() {
+
+    document.getElementById("statPlayers")
+        .textContent =
+        data.players.length;
+
+
+    document.getElementById("statMatches")
+        .textContent =
+        data.matches.length;
+
+
+    const goals =
+        data.players.reduce(
+            (sum,p) => sum + Number(p.goals || 0),
+            0
+        );
+
+
+    document.getElementById("statGoals")
+        .textContent = goals;
+
+
+    let percentage = 0;
+
+    if (data.players.length) {
+
+        percentage =
+            data.players.reduce(
+                (sum,p) =>
+                    sum + getPercentage(p),
+                0
+            ) / data.players.length;
+
+    }
+
+
+    document.getElementById("statPercentage")
+        .textContent =
+        Math.round(percentage) + "%";
+
+
+    const played =
+        data.matches
+            .filter(m => m.score)
+            .slice(-4)
+            .reverse();
+
+
+    document.getElementById("dashboardMatches")
+        .innerHTML =
+        played.length
+        ? played.map(matchHTML).join("")
+        : `<div class="empty">
+             Nog geen gespeelde wedstrijden.
+           </div>`;
+
+
+    const top =
+        [...data.players]
+            .sort(
+                (a,b) =>
+                    Number(b.goals) -
+                    Number(a.goals)
+            )
+            .slice(0,5);
+
+
+    document.getElementById("topScorers")
+        .innerHTML =
+        top.map((p,i) => `
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                padding:11px 0;
+                border-bottom:1px solid var(--border);
+            ">
+
+                <strong>
+                    ${i+1}. ${escapeHTML(p.name)}
+                </strong>
+
+                <span class="badge green">
+                    ${p.goals} goals
+                </span>
+
+            </div>
+
+        `).join("");
+
+}
+
+
+/* =====================================================
+   SPELERS
+===================================================== */
+
+function renderPlayers() {
+
+    const search =
+        document
+            .getElementById("playerSearch")
+            .value
+            .toLowerCase();
+
+
+    const position =
+        document
+            .getElementById("positionFilter")
+            .value;
+
+
+    const sort =
+        document
+            .getElementById("sortPlayers")
+            .value;
+
+
+    let players =
+        data.players.filter(p => {
+
+            const searchMatch =
+                p.name
+                    .toLowerCase()
+                    .includes(search);
+
+            const positionMatch =
+                position === "all" ||
+                p.position === position;
+
+            return searchMatch &&
+                   positionMatch;
+
+        });
+
+
+    players.sort((a,b) => {
+
+        if (sort === "number") {
+            return Number(a.number) -
+                   Number(b.number);
+        }
+
+        if (sort === "percentage") {
+            return getPercentage(b) -
+                   getPercentage(a);
+        }
+
+        return Number(b[sort] || 0) -
+               Number(a[sort] || 0);
+
+    });
+
+
+    const table =
+        document.getElementById(
+            "playersTable"
+        );
+
+
+    if (!players.length) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="9">
+                    <div class="empty">
+                        Geen spelers gevonden.
+                    </div>
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    table.innerHTML =
+        players.map(p => {
+
+            const percentage =
+                getPercentage(p);
+
+
+            return `
+
+            <tr>
+
+                <td>
+
+                    <div class="player">
+
+                        <div class="number">
+                            ${p.number}
+                        </div>
+
+                        <div>
+
+                            <div class="player-name">
+                                ${escapeHTML(p.name)}
+                            </div>
+
+                            <span class="player-position">
+                                ${escapeHTML(p.position)}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+                <td>
+                    ${p.training}/${p.trainingTotal}
+                </td>
+
+
+                <td>
+                    ${p.attendance}/${p.attendanceTotal}
+                </td>
+
+
+                <td>
+
+                    <strong>
+                        ${percentage}%
+                    </strong>
+
+                    <div class="progress">
+                        <div
+                            class="progress-bar"
+                            style="width:${percentage}%">
+                        </div>
+                    </div>
+
+                </td>
+
+
+                <td>
+                    ${p.minutes}
+                </td>
+
+
+                <td>
+                    <strong>${p.goals}</strong>
+                </td>
+
+
+                <td>
+                    ${p.assists}
+                </td>
+
+
+                <td>
+
+                    ${
+                        p.yellow
+                        ? `<span class="badge yellow">
+                            🟨 ${p.yellow}
+                           </span>`
+                        : ""
+                    }
+
+                    ${
+                        p.red
+                        ? `<span class="badge red">
+                            🟥 ${p.red}
+                           </span>`
+                        : ""
+                    }
+
+                    ${
+                        !p.yellow && !p.red
+                        ? "—"
+                        : ""
+                    }
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="btn"
+                        onclick="viewPlayer(${p.number})">
+                        Details
+                    </button>
+
+                </td>
+
+            </tr>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =====================================================
+   WEDSTRIJDEN
+===================================================== */
+
+function renderMatches() {
+
+    const filter =
+        document.getElementById(
+            "matchFilter"
+        ).value;
+
+
+    const today =
+        new Date().toISOString()
+            .split("T")[0];
+
+
+    let matches =
+        [...data.matches];
+
+
+    if (filter === "played") {
+
+        matches =
+            matches.filter(
+                m => m.score
+            );
+
+    }
+
+
+    if (filter === "upcoming") {
+
+        matches =
+            matches.filter(
+                m =>
+                    m.date >= today &&
+                    !m.score
+            );
+
+    }
+
+
+    matches.sort(
+        (a,b) =>
+            a.date.localeCompare(b.date)
+    );
+
+
+    document.getElementById(
+        "matchesList"
+    ).innerHTML =
+
+        matches.length
+        ? matches.map(matchHTML).join("")
+        : `<div class="empty">
+            Geen wedstrijden gevonden.
+           </div>`;
+
+}
+
+
+function matchHTML(m) {
+
+    const initials =
+        m.opponent
+            .split(" ")
+            .map(x => x[0])
+            .join("")
+            .substring(0,3)
+            .toUpperCase();
+
+
+    let scoreClass = "";
+
+    if (m.score) {
+
+        const numbers =
+            m.score.match(/\d+/g);
+
+        if (numbers &&
+            numbers.length >= 2) {
+
+            const home =
+                Number(numbers[0]);
+
+            const away =
+                Number(numbers[1]);
+
+
+            if (m.location === "Thuis") {
+
+                if (home > away)
+                    scoreClass = "win";
+
+                if (home < away)
+                    scoreClass = "loss";
+
+                if (home === away)
+                    scoreClass = "draw";
+
+            } else {
+
+                if (home > away)
+                    scoreClass = "loss";
+
+                if (home < away)
+                    scoreClass = "win";
+
+                if (home === away)
+                    scoreClass = "draw";
+
+            }
+
+        }
+
+    }
+
+
+    return `
+
+        <div class="match">
+
+            <div class="match-date">
+
+                ${formatDate(m.date)}
+
+                <small>
+                    ${m.time || ""}
+                </small>
+
+            </div>
+
+
+            <div class="opponent">
+
+                <div class="opponent-logo">
+                    ${initials}
+                </div>
+
+                <div>
+
+                    <strong>
+                        ${escapeHTML(m.opponent)}
+                    </strong>
+
+                    <span>
+                        ${m.location} •
+                        ${escapeHTML(m.competition)}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="score ${scoreClass}">
+
+                ${m.score || "vs"}
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   COMPETITIE
+===================================================== */
+
+function renderStandings() {
+
+    const standings =
+        [...data.standings]
+            .sort(
+                (a,b) =>
+                    Number(b.points) -
+                    Number(a.points)
+            );
+
+
+    document.getElementById(
+        "standingsTable"
+    ).innerHTML =
+
+        standings.map((team,index) => {
+
+            const diff =
+                Number(team.gf) -
+                Number(team.ga);
+
+
+            return `
+
+            <tr>
+
+                <td>
+                    <strong>
+                        ${index+1}
+                    </strong>
+                </td>
+
+                <td>
+                    ${escapeHTML(team.team)}
+                </td>
+
+                <td>${team.played}</td>
+                <td>${team.win}</td>
+                <td>${team.draw}</td>
+                <td>${team.loss}</td>
+                <td>${team.gf}</td>
+                <td>${team.ga}</td>
+
+                <td>
+                    ${diff > 0 ? "+" : ""}
+                    ${diff}
+                </td>
+
+                <td>
+                    <strong>
+                        ${team.points}
+                    </strong>
+                </td>
+
+            </tr>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =====================================================
+   ADMIN PLAYERS
+===================================================== */
+
+function renderAdminPlayers() {
+
+    const table =
+        document.getElementById(
+            "adminPlayersTable"
+        );
+
+
+    table.innerHTML =
+        data.players
+            .slice()
+            .sort(
+                (a,b) =>
+                    Number(a.number) -
+                    Number(b.number)
+            )
+            .map(p => `
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            ${p.number}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${escapeHTML(p.name)}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(p.position)}
+                    </td>
+
+                    <td>
+                        ${p.training}/${p.trainingTotal}
+                    </td>
+
+                    <td>
+                        ${p.attendance}/${p.attendanceTotal}
+                    </td>
+
+                    <td>
+                        ${p.minutes}
+                    </td>
+
+                    <td>
+                        ${p.goals}
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="btn secondary"
+                            onclick="editPlayer(${p.number})">
+                            Bewerken
+                        </button>
+
+                        <button
+                            class="btn danger"
+                            onclick="deletePlayer(${p.number})">
+                            Verwijder
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `).join("");
+
+}
+
+
+/* =====================================================
+   PLAYER FORM
+===================================================== */
+
+function openPlayerForm(number = null) {
+
+    document.getElementById(
+        "playerFormTitle"
+    ).textContent =
+        number === null
+        ? "Speler toevoegen"
+        : "Speler bewerken";
+
+
+    document.getElementById(
+        "editPlayerNumber"
+    ).value =
+        number ?? "";
+
+
+    if (number === null) {
+
+        document.getElementById(
+            "formNumber"
+        ).value = "";
+
+        document.getElementById(
+            "formName"
+        ).value = "";
+
+        document.getElementById(
+            "formPosition"
+        ).value = "Middenvelder";
+
+        [
+            "formTraining",
+            "formTrainingTotal",
+            "formAttendance",
+            "formAttendanceTotal",
+            "formMinutes",
+            "formMaxMinutes",
+            "formGoals",
+            "formAssists",
+            "formYellow",
+            "formRed"
+        ].forEach(id => {
+
+            document.getElementById(id).value = 0;
+
+        });
+
+    }
+
+
+    openModal("playerFormModal");
+
+}
+
+
+function editPlayer(number) {
+
+    const p =
+        data.players.find(
+            p => Number(p.number) === Number(number)
+        );
+
+
+    if (!p) return;
+
+
+    document.getElementById(
+        "editPlayerNumber"
+    ).value = p.number;
+
+
+    document.getElementById(
+        "formNumber"
+    ).value = p.number;
+
+    document.getElementById(
+        "formName"
+    ).value = p.name;
+
+    document.getElementById(
+        "formPosition"
+    ).value = p.position;
+
+    document.getElementById(
+        "formTraining"
+    ).value = p.training;
+
+    document.getElementById(
+        "formTrainingTotal"
+    ).value = p.trainingTotal;
+
+    document.getElementById(
+        "formAttendance"
+    ).value = p.attendance;
+
+    document.getElementById(
+        "formAttendanceTotal"
+    ).value = p.attendanceTotal;
+
+    document.getElementById(
+        "formMinutes"
+    ).value = p.minutes;
+
+    document.getElementById(
+        "formMaxMinutes"
+    ).value = p.maxMinutes;
+
+    document.getElementById(
+        "formGoals"
+    ).value = p.goals;
+
+    document.getElementById(
+        "formAssists"
+    ).value = p.assists;
+
+    document.getElementById(
+        "formYellow"
+    ).value = p.yellow;
+
+    document.getElementById(
+        "formRed"
+    ).value = p.red;
+
+
+    document.getElementById(
+        "playerFormTitle"
+    ).textContent =
+        "Speler bewerken";
+
+
+    openModal("playerFormModal");
+
+}
+
+
+function savePlayer() {
+
+    const oldNumber =
+        document.getElementById(
+            "editPlayerNumber"
+        ).value;
+
+
+    const player = {
+
+        number: Number(
+            document.getElementById(
+                "formNumber"
+            ).value
+        ),
+
+        name:
+            document.getElementById(
+                "formName"
+            ).value.trim(),
+
+        position:
+            document.getElementById(
+                "formPosition"
+            ).value,
+
+        training: Number(
+            document.getElementById(
+                "formTraining"
+            ).value
+        ),
+
+        trainingTotal: Number(
+            document.getElementById(
+                "formTrainingTotal"
+            ).value
+        ),
+
+        attendance: Number(
+            document.getElementById(
+                "formAttendance"
+            ).value
+        ),
+
+        attendanceTotal: Number(
+            document.getElementById(
+                "formAttendanceTotal"
+            ).value
+        ),
+
+        minutes: Number(
+            document.getElementById(
+                "formMinutes"
+            ).value
+        ),
+
+        maxMinutes: Number(
+            document.getElementById(
+                "formMaxMinutes"
+            ).value
+        ),
+
+        goals: Number(
+            document.getElementById(
+                "formGoals"
+            ).value
+        ),
+
+        assists: Number(
+            document.getElementById(
+                "formAssists"
+            ).value
+        ),
+
+        yellow: Number(
+            document.getElementById(
+                "formYellow"
+            ).value
+        ),
+
+        red: Number(
+            document.getElementById(
+                "formRed"
+            ).value
+        )
+
+    };
+
+
+    if (!player.number ||
+        !player.name) {
+
+        alert(
+            "Vul minimaal een rugnummer en naam in."
+        );
+
+        return;
+
+    }
+
+
+    if (oldNumber) {
+
+        const index =
+            data.players.findIndex(
+                p =>
+                    Number(p.number) ===
+                    Number(oldNumber)
+            );
+
+
+        if (index >= 0) {
+
+            data.players[index] =
+                player;
+
+        }
+
+    } else {
+
+        data.players.push(player);
+
+    }
+
+
+    closeModal("playerFormModal");
+
+    saveData();
+
+}
+
+
+/* =====================================================
+   DELETE PLAYER
+===================================================== */
+
+function deletePlayer(number) {
+
+    const player =
+        data.players.find(
+            p =>
+                Number(p.number) ===
+                Number(number)
+        );
+
+
+    if (!player) return;
+
+
+    if (!confirm(
+        `Speler "${player.name}" verwijderen?`
+    )) {
+        return;
+    }
+
+
+    data.players =
+        data.players.filter(
+            p =>
+                Number(p.number) !==
+                Number(number)
+        );
+
+
+    saveData();
+
+}
+
+
+/* =====================================================
+   ADMIN MATCHES
+===================================================== */
+
+function renderAdminMatches() {
+
+    document.getElementById(
+        "adminMatchesTable"
+    ).innerHTML =
+
+        data.matches.map(m => `
+
+            <tr>
+
+                <td>
+                    ${formatDate(m.date)}
+                </td>
+
+                <td>
+                    ${m.time}
+                </td>
+
+                <td>
+                    ${escapeHTML(m.opponent)}
+                </td>
+
+                <td>
+                    ${m.location}
+                </td>
+
+                <td>
+                    ${m.score || "—"}
+                </td>
+
+                <td>
+
+                    <button
+                        class="btn secondary"
+                        onclick="editMatch(${m.id})">
+                        Bewerken
+                    </button>
+
+                    <button
+                        class="btn danger"
+                        onclick="deleteMatch(${m.id})">
+                        Verwijder
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `).join("");
+
+}
+
+
+function openMatchForm(id = null) {
+
+    document.getElementById(
+        "editMatchId"
+    ).value = id ?? "";
+
+
+    if (id === null) {
+
+        document.getElementById(
+            "matchDate"
+        ).value = "";
+
+        document.getElementById(
+            "matchTime"
+        ).value = "14:00";
+
+        document.getElementById(
+            "matchOpponent"
+        ).value = "";
+
+        document.getElementById(
+            "matchLocation"
+        ).value = "Thuis";
+
+        document.getElementById(
+            "matchCompetition"
+        ).value = "Competitie";
+
+        document.getElementById(
+            "matchScore"
+        ).value = "";
+
+    }
+
+
+    openModal("matchFormModal");
+
+}
+
+
+function editMatch(id) {
+
+    const m =
+        data.matches.find(
+            m => Number(m.id) === Number(id)
+        );
+
+
+    if (!m) return;
+
+
+    document.getElementById(
+        "editMatchId"
+    ).value = m.id;
+
+    document.getElementById(
+        "matchDate"
+    ).value = m.date;
+
+    document.getElementById(
+        "matchTime"
+    ).value = m.time;
+
+    document.getElementById(
+        "matchOpponent"
+    ).value = m.opponent;
+
+    document.getElementById(
+        "matchLocation"
+    ).value = m.location;
+
+    document.getElementById(
+        "matchCompetition"
+    ).value = m.competition;
+
+    document.getElementById(
+        "matchScore"
+    ).value = m.score || "";
+
+
+    openModal("matchFormModal");
+
+}
+
+
+function saveMatch() {
+
+    const id =
+        document.getElementById(
+            "editMatchId"
+        ).value;
+
+
+    const match = {
+
+        id:
+            id
+            ? Number(id)
+            : Date.now(),
+
+        date:
+            document.getElementById(
+                "matchDate"
+            ).value,
+
+        time:
+            document.getElementById(
+                "matchTime"
+            ).value,
+
+        opponent:
+            document.getElementById(
+                "matchOpponent"
+            ).value.trim(),
+
+        location:
+            document.getElementById(
+                "matchLocation"
+            ).value,
+
+        competition:
+            document.getElementById(
+                "matchCompetition"
+            ).value.trim(),
+
+        score:
+            document.getElementById(
+                "matchScore"
+            ).value.trim()
+
+    };
+
+
+    if (!match.date ||
+        !match.opponent) {
+
+        alert(
+            "Vul minimaal een datum en tegenstander in."
+        );
+
+        return;
+
+    }
+
+
+    if (id) {
+
+        const index =
+            data.matches.findIndex(
+                m =>
+                    Number(m.id) ===
+                    Number(id)
+            );
+
+
+        if (index >= 0) {
+            data.matches[index] = match;
+        }
+
+    } else {
+
+        data.matches.push(match);
+
+    }
+
+
+    closeModal("matchFormModal");
+
+    saveData();
+
+}
+
+
+function deleteMatch(id) {
+
+    if (!confirm(
+        "Deze wedstrijd verwijderen?"
+    )) {
+        return;
+    }
+
+
+    data.matches =
+        data.matches.filter(
+            m =>
+                Number(m.id) !==
+                Number(id)
+        );
+
+
+    saveData();
+
+}
+
+
+/* =====================================================
+   ADMIN STANDINGS
+===================================================== */
+
+function renderAdminStandings() {
+
+    document.getElementById(
+        "adminStandingsTable"
+    ).innerHTML =
+
+        data.standings.map(
+            (team,index) => `
+
+            <tr>
+
+                <td>
+                    ${escapeHTML(team.team)}
+                </td>
+
+                <td>${team.played}</td>
+                <td>${team.win}</td>
+                <td>${team.draw}</td>
+                <td>${team.loss}</td>
+                <td>${team.gf}</td>
+                <td>${team.ga}</td>
+                <td>${team.points}</td>
+
+                <td>
+
+                    <button
+                        class="btn danger"
+                        onclick="deleteTeam(${index})">
+                        Verwijder
+                    </button>
+
+                </td>
+
+            </tr>
+
+            `
+        ).join("");
+
+}
+
+
+function openTeamForm() {
+
+    [
+        "teamName",
+        "teamPlayed",
+        "teamWin",
+        "teamDraw",
+        "teamLoss",
+        "teamGF",
+        "teamGA",
+        "teamPoints"
+    ].forEach(id => {
+
+        document.getElementById(id).value =
+            id === "teamName" ? "" : 0;
+
+    });
+
+
+    openModal("teamFormModal");
+
+}
+
+
+function saveTeam() {
+
+    const team = {
+
+        team:
+            document.getElementById(
+                "teamName"
+            ).value.trim(),
+
+        played:
+            Number(
+                document.getElementById(
+                    "teamPlayed"
+                ).value
+            ),
+
+        win:
+            Number(
+                document.getElementById(
+                    "teamWin"
+                ).value
+            ),
+
+        draw:
+            Number(
+                document.getElementById(
+                    "teamDraw"
+                ).value
+            ),
+
+        loss:
+            Number(
+                document.getElementById(
+                    "teamLoss"
+                ).value
+            ),
+
+        gf:
+            Number(
+                document.getElementById(
+                    "teamGF"
+                ).value
+            ),
+
+        ga:
+            Number(
+                document.getElementById(
+                    "teamGA"
+                ).value
+            ),
+
+        points:
+            Number(
+                document.getElementById(
+                    "teamPoints"
+                ).value
+            )
+
+    };
+
+
+    if (!team.team) {
+
+        alert(
+            "Vul een teamnaam in."
+        );
+
+        return;
+
+    }
+
+
+    data.standings.push(team);
+
+    closeModal("teamFormModal");
+
+    saveData();
+
+}
+
+
+function deleteTeam(index) {
+
+    if (!confirm(
+        "Dit team uit de stand verwijderen?"
+    )) {
+        return;
+    }
+
+
+    data.standings.splice(index,1);
+
+    saveData();
+
+}
+
+
+/* =====================================================
+   PLAYER DETAILS
+===================================================== */
+
+function viewPlayer(number) {
+
+    const p =
+        data.players.find(
+            p =>
+                Number(p.number) ===
+                Number(number)
+        );
+
+
+    if (!p) return;
+
+
+    alert(
+`${p.name}
+
+Rugnummer: ${p.number}
+Positie: ${p.position}
+
+Training:
+${p.training}/${p.trainingTotal}
+
+Wedstrijden:
+${p.attendance}/${p.attendanceTotal}
+
+Speelpercentage:
+${getPercentage(p)}%
+
+Speelminuten:
+${p.minutes}
+
+Doelpunten:
+${p.goals}
+
+Assists:
+${p.assists}
+
+Gele kaarten:
+${p.yellow}
+
+Rode kaarten:
+${p.red}`
+    );
+
+}
+
+
+/* =====================================================
+   MODALS
+===================================================== */
+
+function openModal(id) {
+
+    document
+        .getElementById(id)
+        .classList.add("show");
+
+}
+
+
+function closeModal(id) {
+
+    document
+        .getElementById(id)
+        .classList.remove("show");
+
+}
+
+
+/* =====================================================
+   ADMIN TABS
+===================================================== */
+
+document
+    .querySelectorAll(".admin-tab")
+    .forEach(tab => {
+
+        tab.addEventListener(
+            "click",
+            () => {
+
+                document
+                    .querySelectorAll(".admin-tab")
+                    .forEach(t =>
+                        t.classList.remove(
+                            "active"
+                        )
+                    );
+
+
+                document
+                    .querySelectorAll(".admin-section")
+                    .forEach(section =>
+                        section.classList.remove(
+                            "active"
+                        )
+                    );
+
+
+                tab.classList.add("active");
+
+
+                document
+                    .getElementById(
+                        tab.dataset.admin
+                    )
+                    .classList.add("active");
+
+            }
+        );
+
+    });
+
+
+/* =====================================================
+   FILTERS
+===================================================== */
+
+document
+    .getElementById("playerSearch")
+    .addEventListener(
+        "input",
+        renderPlayers
+    );
+
+
+document
+    .getElementById("positionFilter")
+    .addEventListener(
+        "change",
+        renderPlayers
+    );
+
+
+document
+    .getElementById("sortPlayers")
+    .addEventListener(
+        "change",
+        renderPlayers
+    );
+
+
+document
+    .getElementById("matchFilter")
+    .addEventListener(
+        "change",
+        renderMatches
+    );
+
+
+/* =====================================================
+   EXPORT
+===================================================== */
+
+function exportData() {
+
+    const json =
+        JSON.stringify(
+            data,
+            null,
+            2
+        );
+
+
+    const blob =
+        new Blob(
+            [json],
+            {
+                type:
+                    "application/json"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const a =
+        document.createElement("a");
+
+
+    a.href = url;
+
+    a.download =
+        "sv-twello-zondag-2-backup.json";
+
+
+    a.click();
+
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+/* =====================================================
+   IMPORT
+===================================================== */
+
+document
+    .getElementById("importFile")
+    .addEventListener(
+        "change",
+        event => {
+
+            const file =
+                event.target.files[0];
+
+
+            if (!file) return;
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload = e => {
+
+                try {
+
+                    const imported =
+                        JSON.parse(
+                            e.target.result
+                        );
+
+
+                    if (
+                        !imported.players ||
+                        !imported.matches ||
+                        !imported.standings
+                    ) {
+
+                        throw new Error(
+                            "Ongeldig bestand"
+                        );
+
+                    }
+
+
+                    if (!confirm(
+                        "Huidige gegevens vervangen door deze backup?"
+                    )) {
+                        return;
+                    }
+
+
+                    data = imported;
+
+                    saveData();
+
+                    showToast(
+                        "Backup geïmporteerd"
+                    );
+
+                }
+                catch {
+
+                    alert(
+                        "Dit bestand is geen geldige backup."
+                    );
+
+                }
+
+            };
+
+
+            reader.readAsText(file);
+
+        }
+    );
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+function resetData() {
+
+    if (!confirm(
+        "LET OP: alle opgeslagen gegevens worden verwijderd. Doorgaan?"
+    )) {
+        return;
+    }
+
+
+    if (!confirm(
+        "Weet je het echt zeker?"
+    )) {
+        return;
+    }
+
+
+    data =
+        structuredClone(
+            defaultData
+        );
+
+
+    saveData();
+
+}
+
+
+/* =====================================================
+   HULPFUNCTIES
+===================================================== */
+
+function formatDate(date) {
+
+    if (!date) return "—";
+
+
+    return new Date(
+        date + "T12:00:00"
+    ).toLocaleDateString(
+        "nl-NL",
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+
+    setTimeout(
+        () =>
+            toast.classList.remove("show"),
+        2200
+    );
+
+}
+
+
+/* =====================================================
+   ALLES RENDEREN
+===================================================== */
+
+function renderAll() {
+
+    renderDashboard();
+
+    renderPlayers();
+
+    renderMatches();
+
+    renderStandings();
+
+    if (isAdmin) {
+
+        renderAdminPlayers();
+
+        renderAdminMatches();
+
+        renderAdminStandings();
+
+    }
+
+}
+
+
+/* =====================================================
+   INITIALISATIE
+===================================================== */
+
+loadData();
+
+checkLogin();
+
+renderAll();
+
+
+/* ENTER IN LOGIN */
+
+document
+    .getElementById("adminPassword")
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Enter") {
+                login();
+            }
+
+        }
+    );
+
+
+/* MODAL SLUITEN MET ESC */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key !== "Escape") return;
+
+
+        document
+            .querySelectorAll(".modal.show")
+            .forEach(modal =>
+                modal.classList.remove("show")
+            );
+
+    }
+);
+
+</script>
+
+</body>
+</html>
