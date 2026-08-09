@@ -288,10 +288,6 @@ function renderStatisticsTable(headers, rows) {
         + '</tbody></table></div>';
 }
 
-    populatePlayerComparisonOptions();
-    renderPlayerComparison();
-}
-
 function getGoalsByMatch(matches) {
     return [...matches]
         .filter(match => Array.isArray(match.events) && match.events.length)
