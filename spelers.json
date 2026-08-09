@@ -1,10 +1,158 @@
 {
   "spelers": [
     {
+      "rugnummer": 1,
+      "naam": "Dennis Schreurs",
+      "positie": "Keeper"
+    },
+    {
+      "rugnummer": 2,
+      "naam": "Dennis Witteveen",
+      "positie": "Verdediger"
+    },
+    {
+      "rugnummer": 3,
+      "naam": "Casper van Brink",
+      "positie": "Verdediger"
+    },
+    {
+      "rugnummer": 4,
+      "naam": "Marc Albers",
+      "positie": "Verdediger"
+    },
+    {
+      "rugnummer": 5,
+      "naam": "Jesse van Brink",
+      "positie": "Aanvaller"
+    },
+    {
+      "rugnummer": 6,
+      "naam": "Delano de Vogel",
+      "positie": "Verdediger"
+    },
+    {
+      "rugnummer": 9,
+      "naam": "Glenn Buitenhuis",
+      "positie": "Aanvaller"
+    },
+    {
       "rugnummer": 10,
       "naam": "Rodi Gerritsen",
-      "positie": "CM",
-      "voet": "Rechts"
+      "positie": "Middenvelder"
+    },
+    {
+      "rugnummer": 11,
+      "naam": "Niels Gijsberts",
+      "positie": "Middenvelder"
+    },
+    {
+      "rugnummer": 12,
+      "naam": "Jasper Nijdeken",
+      "positie": "Middenvelder"
+    },
+    {
+      "rugnummer": 13,
+      "naam": "Jean-Paul de Haas",
+      "positie": "Aanvaller"
+    },
+    {
+      "rugnummer": 14,
+      "naam": "Robbert Teelen",
+      "positie": "Middenvelder"
+    },
+    {
+      "rugnummer": 15,
+      "naam": "Thijs Oldenboom",
+      "positie": "Aanvaller"
+    },
+    {
+      "rugnummer": 19,
+      "naam": "Jorn Oosting",
+      "positie": "Middenvelder"
+    },
+    {
+      "rugnummer": 27,
+      "naam": "Tom Nijdeken",
+      "positie": "Middenvelder"
+    },
+    {
+      "rugnummer": 77,
+      "naam": "Jani Setz",
+      "positie": "Aanvaller"
+    },
+    {
+      "rugnummer": 89,
+      "naam": "Nicky Eekhuis",
+      "positie": "Aanvaller"
+    },
+    {
+      "rugnummer": 99,
+      "naam": "Bram Dolman",
+      "positie": "Aanvaller"
+    },
+    {
+      "rugnummer": "",
+      "naam": "Berry van der Scheer",
+      "positie": "Verdediger"
+    },
+    {
+      "rugnummer": "",
+      "naam": "Denzel Boscher",
+      "positie": "Verdediger",
+      "gastspeler": true
+    },
+    {
+      "rugnummer": "",
+      "naam": "Jervin",
+      "positie": "Verdediger"
+    },
+    {
+      "rugnummer": "",
+      "naam": "Koen",
+      "positie": "Verdediger"
+    },
+    {
+      "rugnummer": "",
+      "naam": "Stan Martens",
+      "positie": "Middenvelder",
+      "gastspeler": true
+    },
+    {
+      "rugnummer": "",
+      "naam": "Thomas Kooten",
+      "positie": "Middenvelder"
+    },
+    {
+      "rugnummer": "",
+      "naam": "Tommy Nijdeken",
+      "positie": "Middenvelder"
+    },
+    {
+      "rugnummer": "",
+      "naam": "Tygo Vijge",
+      "positie": "Middenvelder"
+    }
+  ],
+  "staf": [
+    {
+      "naam": "Andrew Hietbrink",
+      "rol": "Leider"
+    },
+    {
+      "naam": "Jan Berkenbosch",
+      "rol": "Trainer"
+    },
+    {
+      "naam": "Christiaan Grootgens",
+      "rol": "Trainer"
+    },
+    {
+      "naam": "Sander Bouwmeester",
+      "rol": "Trainer"
+    },
+    {
+      "naam": "Jeffrey Karrenbeld",
+      "rol": "Trainer"
     }
   ]
 }
