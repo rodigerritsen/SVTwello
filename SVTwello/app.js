@@ -232,27 +232,149 @@ function renderStatistics() {
     const container = document.getElementById('statisticsContent');
     if (!container) return;
 
-    const categories = [
-        { title: 'Topscorers', key: 'goals', label: 'doelpunt(en)' },
-        { title: 'Assists', key: 'assists', label: 'assist(s)' },
-        { title: 'Gele kaarten', key: 'yellow', label: 'gele kaart' },
-        { title: 'Rode kaarten', key: 'red', label: 'rode kaart' }
-    ];
+    const goalsByMatch = getGoalsByMatch(data.matches);
+    const cardsTrend = getCardsTrend(data.matches);
+    const assistsByPeriod = getAssistsByPeriod(data.matches);
 
-    container.innerHTML = categories.map(category => {
-        const ranked = [...data.players]
-            .filter(player => Number(player[category.key] || 0) > 0)
-            .sort((a, b) => Number(b[category.key] || 0) - Number(a[category.key] || 0))
-            .slice(0, 8);
+    const topScorers = [...data.players]
+        .filter(player => Number(player.goals || 0) > 0)
+        .sort((a, b) => Number(b.goals || 0) - Number(a.goals || 0))
+        .slice(0, 6);
 
-        if (!ranked.length) {
-            return '<div class="card stats-page-card"><div class="card-header"><h3>' + escapeHTML(category.title) + '</h3></div><div class="card-body"><div class="empty">Nog geen gegevens.</div></div></div>';
-        }
+    container.innerHTML = `
+        <div class="card chart-card">
+            <div class="card-header"><h3>Doelpunten per wedstrijd</h3></div>
+            <div class="card-body">
+                ${goalsByMatch.length
+                    ? goalsByMatch.map(item => renderStatBar(item.label, item.value, 6)).join('')
+                    : '<div class="empty">Nog geen doelpunten.</div>' }
+            </div>
+        </div>
 
-        return '<div class="card stats-page-card"><div class="card-header"><h3>' + escapeHTML(category.title) + '</h3></div><div class="card-body"><div class="stats-list">'
-            + ranked.map((player, index) => '<div class="stats-row"><strong>' + (index + 1) + '. ' + escapeHTML(player.name) + '</strong><span class="stats-value-pill">' + escapeHTML(player[category.key]) + ' ' + escapeHTML(category.label) + '</span></div>').join('')
-            + '</div></div></div>';
-    }).join('');
+        <div class="card chart-card">
+            <div class="card-header"><h3>Kaarten trend</h3></div>
+            <div class="card-body">
+                ${cardsTrend.length
+                    ? cardsTrend.map(item => `
+                        <div class="chart-row">
+                            <div class="chart-row-title">${escapeHTML(item.label)}</div>
+                            ${renderStatBar('Geel', item.yellow, 3, 'var(--yellow)')}
+                            ${renderStatBar('Rood', item.red, 2, 'var(--red)')}
+                        </div>
+                    `).join('')
+                    : '<div class="empty">Nog geen kaartgegevens.</div>' }
+            </div>
+        </div>
+
+        <div class="card chart-card">
+            <div class="card-header"><h3>Assists per periode</h3></div>
+            <div class="card-body">
+                ${Object.entries(assistsByPeriod).map(([period, value]) => renderStatBar(period, value, 6)).join('')}
+            </div>
+        </div>
+
+        <div class="card chart-card">
+            <div class="card-header"><h3>Topscorers</h3></div>
+            <div class="card-body">
+                ${topScorers.length
+                    ? topScorers.map((player, index) => `
+                        <div class="stats-row"><strong>${index + 1}. ${escapeHTML(player.name)}</strong>
+                            <span class="stats-value-pill">${escapeHTML(player.goals)} doelpunt(en)</span>
+                        </div>
+                    `).join('')
+                    : '<div class="empty">Nog geen topscorers.</div>' }
+            </div>
+        </div>`;
+
+    populatePlayerComparisonOptions();
+    renderPlayerComparison();
+}
+
+function getGoalsByMatch(matches) {
+    return [...matches]
+        .filter(match => Array.isArray(match.events) && match.events.length)
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .map(match => ({ label: formatDate(match.date), value: match.events.length }));
+}
+
+function getCardsTrend(matches) {
+    return [...matches]
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .map(match => {
+            const yellow = (match.cards || []).filter(card => card.type === 'geel').length;
+            const red = (match.cards || []).filter(card => card.type === 'rood').length;
+            return { label: formatDate(match.date), yellow, red };
+        });
+}
+
+function getAssistsByPeriod(matches) {
+    const periods = { '0-45': 0, '46-90': 0, '90+': 0 };
+    matches.forEach(match => {
+        (match.events || []).forEach(event => {
+            if (!event.assist) return;
+            const minute = Number(event.minute) || 0;
+            if (minute <= 45) periods['0-45']++;
+            else if (minute <= 90) periods['46-90']++;
+            else periods['90+']++;
+        });
+    });
+    return periods;
+}
+
+function renderStatBar(label, value, maxValue = 10, color = 'var(--green)') {
+    const width = maxValue > 0 ? Math.min(100, Math.round((value / maxValue) * 100)) : 0;
+    return '<div class="chart-bar">'
+        + '<div class="chart-label">' + escapeHTML(label) + '</div>'
+        + '<div class="chart-track"><div class="chart-fill" style="width:' + width + '%;background:' + color + '"></div></div>'
+        + '<div class="chart-value">' + escapeHTML(value) + '</div>'
+        + '</div>';
+}
+
+function populatePlayerComparisonOptions() {
+    const selectA = document.getElementById('comparePlayerA');
+    const selectB = document.getElementById('comparePlayerB');
+    if (!selectA || !selectB) return;
+
+    const players = [...data.players].sort((a, b) => a.name.localeCompare(b.name));
+    const options = players.map(player => '<option value="' + escapeHTML(player.name) + '">' + escapeHTML(player.name) + '</option>').join('');
+
+    selectA.innerHTML = '<option value="">Kies speler A</option>' + options;
+    selectB.innerHTML = '<option value="">Kies speler B</option>' + options;
+
+    selectA.addEventListener('change', renderPlayerComparison);
+    selectB.addEventListener('change', renderPlayerComparison);
+}
+
+function renderPlayerComparison() {
+    const selectA = document.getElementById('comparePlayerA');
+    const selectB = document.getElementById('comparePlayerB');
+    const result = document.getElementById('comparisonResult');
+    if (!selectA || !selectB || !result) return;
+
+    const playerA = data.players.find(player => player.name === selectA.value);
+    const playerB = data.players.find(player => player.name === selectB.value);
+
+    if (!playerA || !playerB) {
+        result.innerHTML = '<div class="empty">Kies twee spelers om te vergelijken.</div>';
+        return;
+    }
+
+    result.innerHTML = '<div class="comparison-grid">'
+        + '<div class="comparison-card">'
+        + '<strong>' + escapeHTML(playerA.name) + '</strong>'
+        + '<p>Doelpunten: ' + escapeHTML(playerA.goals || 0) + '</p>'
+        + '<p>Assists: ' + escapeHTML(playerA.assists || 0) + '</p>'
+        + '<p>Gele kaarten: ' + escapeHTML(playerA.yellow || 0) + '</p>'
+        + '<p>Rode kaarten: ' + escapeHTML(playerA.red || 0) + '</p>'
+        + '</div>'
+        + '<div class="comparison-card">'
+        + '<strong>' + escapeHTML(playerB.name) + '</strong>'
+        + '<p>Doelpunten: ' + escapeHTML(playerB.goals || 0) + '</p>'
+        + '<p>Assists: ' + escapeHTML(playerB.assists || 0) + '</p>'
+        + '<p>Gele kaarten: ' + escapeHTML(playerB.yellow || 0) + '</p>'
+        + '<p>Rode kaarten: ' + escapeHTML(playerB.red || 0) + '</p>'
+        + '</div>'
+        + '</div>';
 }
 
 function renderSpelerVanHetJaar(winnaars) {
@@ -390,6 +512,10 @@ Promise.all([
                 assist: event.assist || event.assistPlayer || '',
                 minute: event.minuut || event.minute || ''
             }));
+            const cards = (w.kaarten || []).map(card => ({
+                player: card.speler || '',
+                type: String(card.type || '').toLowerCase()
+            }));
 
             return {
                 id: w.id,
@@ -399,7 +525,8 @@ Promise.all([
                 location: isThuis ? 'Thuis' : 'Uit',
                 competition: w.competitie || 'Competitie',
                 score: w.uitslag || '',
-                events
+                events,
+                cards
             };
         });
     }
