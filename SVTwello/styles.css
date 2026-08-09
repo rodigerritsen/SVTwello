@@ -35,7 +35,7 @@ button {
 }
 
 header {
-    background: var(--green);
+    background: var(--green-dark);
     color: white;
     position: sticky;
     top: 0;
@@ -113,7 +113,7 @@ main {
 
 .hero {
     color: white;
-    background: var(--green);
+    background: var(--green-dark);
     padding: 30px;
     border-radius: 18px;
     margin-bottom: 20px;
