@@ -224,6 +224,9 @@ main {
 .select {
     border: 1px solid var(--border);
     background: white;
+    border-radius: 9px;
+    padding: 10px 12px;
+    outline: none;
 }
 
 .comparison-panel {
@@ -288,11 +291,6 @@ main {
     margin-bottom: 6px;
     color: var(--muted);
     font-size: 14px;
-}
-
-    border-radius: 9px;
-    padding: 10px 12px;
-    outline: none;
 }
 
 .input:focus,
