@@ -42,7 +42,9 @@ function parseTruthy(value) {
     if (value === null || value === undefined || value === '') return false;
     if (typeof value === 'boolean') return value;
     if (typeof value === 'number') return value !== 0;
-    return String(value).trim().toLowerCase() in ['ja', 'yes', 'true', '1', 'x', 'y'];
+    const normalized = String(value).trim().toLowerCase();
+    if (normalized === '0' || normalized === 'nee' || normalized === 'no' || normalized === 'false') return false;
+    return ['ja', 'yes', 'true', '1', 'x', 'y'].includes(normalized);
 }
 
 function parseNumber(value) {
