@@ -51,6 +51,10 @@ function parseNumber(value) {
     return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function hasExplicitValue(value) {
+    return value !== null && value !== undefined && String(value).trim() !== '';
+}
+
 function normalizeCellValue(value) {
     if (value instanceof Date) {
         const year = value.getFullYear();
@@ -138,9 +142,11 @@ function buildImportDataFromWorkbook(workbook) {
     });
 
     const statsByPlayer = {};
+    const statsPresenceByPlayer = {};
     players.forEach(player => {
         if (!player.name) return;
-        statsByPlayer[player.name.toLowerCase()] = {
+        const key = player.name.toLowerCase();
+        statsByPlayer[key] = {
             goals: 0,
             assists: 0,
             penalties: 0,
@@ -148,6 +154,15 @@ function buildImportDataFromWorkbook(workbook) {
             red: 0,
             late: 0,
             present: 0
+        };
+        statsPresenceByPlayer[key] = {
+            goals: false,
+            assists: false,
+            penalties: false,
+            yellow: false,
+            red: false,
+            late: false,
+            present: false
         };
     });
 
@@ -173,26 +188,50 @@ function buildImportDataFromWorkbook(workbook) {
         };
 
         const spelerNaam = String(row.speler_naam || row.speler || '').trim();
-        const doelpunten = parseNumber(row.doelpunten || row.goals || 0);
-        const assists = parseNumber(row.assists || row.assist || 0);
-        const penalty = parseNumber(row.penalty || row.penalties || 0);
-        const geel = parseNumber(row.geel || row.yellow || 0);
-        const rood = parseNumber(row.rood || row.red || 0);
-        const teLaat = row['te laat'] ?? row.te_laat ?? '';
+        const doelpuntenValue = row.doelpunten ?? row.goals ?? '';
+        const assistsValue = row.assists ?? row.assist ?? '';
+        const penaltyValue = row.penalty ?? row.penalties ?? '';
+        const geelValue = row.geel ?? row.yellow ?? '';
+        const roodValue = row.rood ?? row.red ?? '';
+        const teLaatValue = row['te laat'] ?? row.te_laat ?? '';
+        const aanwezigValue = row.aanwezig ?? row.attendance ?? row.present ?? '';
+        const doelpunten = parseNumber(doelpuntenValue);
+        const assists = parseNumber(assistsValue);
+        const penalty = parseNumber(penaltyValue);
+        const geel = parseNumber(geelValue);
+        const rood = parseNumber(roodValue);
+        const teLaat = teLaatValue;
         const status = row.status || '';
 
         const playerKey = spelerNaam.toLowerCase();
         const stats = statsByPlayer[playerKey] || { goals: 0, assists: 0, penalties: 0, yellow: 0, red: 0, late: 0, present: 0 };
+        const presence = statsPresenceByPlayer[playerKey] || {
+            goals: false,
+            assists: false,
+            penalties: false,
+            yellow: false,
+            red: false,
+            late: false,
+            present: false
+        };
+        if (hasExplicitValue(doelpuntenValue)) presence.goals = true;
+        if (hasExplicitValue(assistsValue)) presence.assists = true;
+        if (hasExplicitValue(penaltyValue)) presence.penalties = true;
+        if (hasExplicitValue(geelValue)) presence.yellow = true;
+        if (hasExplicitValue(roodValue)) presence.red = true;
+        if (hasExplicitValue(teLaatValue)) presence.late = true;
+        if (hasExplicitValue(aanwezigValue)) presence.present = true;
         stats.goals += doelpunten;
         stats.assists += assists;
         stats.penalties += penalty;
         stats.yellow += geel;
         stats.red += rood;
         stats.late += parseNumber(teLaat);
-        if (parseTruthy(row.aanwezig || row.attendance || row.present)) {
+        if (parseTruthy(aanwezigValue)) {
             stats.present += 1;
         }
         statsByPlayer[playerKey] = stats;
+        statsPresenceByPlayer[playerKey] = presence;
 
         for (let i = 0; i < doelpunten; i += 1) entry.doelpunten.push({ speler: spelerNaam });
         for (let i = 0; i < assists; i += 1) entry.assists.push({ speler: spelerNaam });
@@ -234,7 +273,9 @@ function buildImportDataFromWorkbook(workbook) {
         });
 
     players.forEach(player => {
-        const stats = statsByPlayer[player.name.toLowerCase()];
+        const key = player.name.toLowerCase();
+        const stats = statsByPlayer[key];
+        const presence = statsPresenceByPlayer[key];
         if (!stats) return;
         player.goals = Number(stats.goals || 0);
         player.assists = Number(stats.assists || 0);
@@ -243,6 +284,13 @@ function buildImportDataFromWorkbook(workbook) {
         player.red = Number(stats.red || 0);
         player.late = Number(stats.late || 0);
         player.present = Number(stats.present || 0);
+        player.goalsHasData = Boolean(presence?.goals);
+        player.assistsHasData = Boolean(presence?.assists);
+        player.penaltiesHasData = Boolean(presence?.penalties);
+        player.yellowHasData = Boolean(presence?.yellow);
+        player.redHasData = Boolean(presence?.red);
+        player.lateHasData = Boolean(presence?.late);
+        player.presentHasData = Boolean(presence?.present);
     });
 
     if (trainingsInvoerRows.length) {
@@ -348,6 +396,13 @@ function hydrateFromImportedData() {
                     red: Number(source.red || 0),
                     late: Number(source.late || 0),
                     present: Number(source.present || 0),
+                    goalsHasData: Boolean(source.goalsHasData),
+                    assistsHasData: Boolean(source.assistsHasData),
+                    penaltiesHasData: Boolean(source.penaltiesHasData),
+                    yellowHasData: Boolean(source.yellowHasData),
+                    redHasData: Boolean(source.redHasData),
+                    lateHasData: Boolean(source.lateHasData),
+                    presentHasData: Boolean(source.presentHasData),
                     training: Number(source.training || player.training || 0),
                     trainingTotal: Number(source.trainingTotal || player.trainingTotal || 0),
                     attendance: Number(source.attendance || player.attendance || 0),
@@ -579,8 +634,12 @@ function renderStatistics() {
 
     statGroups.forEach(group => {
         const rows = players
-            .map(player => [player.name, Number(player[group.field] || 0)])
-            .filter(([, value]) => value > 0)
+            .map(player => {
+                const value = Number(player[group.field] || 0);
+                const hasData = Boolean(player[`${group.field}HasData`]);
+                return hasData || value > 0 ? [player.name, value] : null;
+            })
+            .filter(Boolean)
             .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 
         if (rows.length) {
@@ -612,10 +671,14 @@ function renderStatisticsList(header, rows) {
     }
 
     return '<div class="stat-list">'
-        + rows.map(row => {
+        + rows.map((row, index) => {
             const [player, value] = row;
+            const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
             return '<div class="stat-list-item">'
-                + '<div class="stat-list-player">' + escapeHTML(player) + '</div>'
+                + '<div class="stat-list-player">'
+                + (medal ? '<span class="stat-medal">' + escapeHTML(medal) + '</span>' : '')
+                + '<span>' + escapeHTML(player) + '</span>'
+                + '</div>'
                 + '<div class="stat-list-value">' + escapeHTML(value) + ' ' + escapeHTML(header) + '</div>'
                 + '</div>';
         }).join('')
