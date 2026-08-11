@@ -125,7 +125,9 @@ function buildImportDataFromWorkbook(workbook) {
             assists: 0,
             penalties: 0,
             yellow: 0,
-            red: 0
+            red: 0,
+            late: 0,
+            present: 0
         }));
 
     const playerLookup = new Map();
@@ -133,6 +135,20 @@ function buildImportDataFromWorkbook(workbook) {
         if (player.name) {
             playerLookup.set(player.name.toLowerCase(), player);
         }
+    });
+
+    const statsByPlayer = {};
+    players.forEach(player => {
+        if (!player.name) return;
+        statsByPlayer[player.name.toLowerCase()] = {
+            goals: 0,
+            assists: 0,
+            penalties: 0,
+            yellow: 0,
+            red: 0,
+            late: 0,
+            present: 0
+        };
     });
 
     const completedMatchIds = new Set(
@@ -164,6 +180,19 @@ function buildImportDataFromWorkbook(workbook) {
         const rood = parseNumber(row.rood || row.red || 0);
         const teLaat = row['te laat'] ?? row.te_laat ?? '';
         const status = row.status || '';
+
+        const playerKey = spelerNaam.toLowerCase();
+        const stats = statsByPlayer[playerKey] || { goals: 0, assists: 0, penalties: 0, yellow: 0, red: 0, late: 0, present: 0 };
+        stats.goals += doelpunten;
+        stats.assists += assists;
+        stats.penalties += penalty;
+        stats.yellow += geel;
+        stats.red += rood;
+        stats.late += parseNumber(teLaat);
+        if (parseTruthy(row.aanwezig || row.attendance || row.present)) {
+            stats.present += 1;
+        }
+        statsByPlayer[playerKey] = stats;
 
         for (let i = 0; i < doelpunten; i += 1) entry.doelpunten.push({ speler: spelerNaam });
         for (let i = 0; i < assists; i += 1) entry.assists.push({ speler: spelerNaam });
@@ -203,6 +232,18 @@ function buildImportDataFromWorkbook(workbook) {
                 cards: data.kaarten || []
             };
         });
+
+    players.forEach(player => {
+        const stats = statsByPlayer[player.name.toLowerCase()];
+        if (!stats) return;
+        player.goals = Number(stats.goals || 0);
+        player.assists = Number(stats.assists || 0);
+        player.penalties = Number(stats.penalties || 0);
+        player.yellow = Number(stats.yellow || 0);
+        player.red = Number(stats.red || 0);
+        player.late = Number(stats.late || 0);
+        player.present = Number(stats.present || 0);
+    });
 
     if (trainingsInvoerRows.length) {
         const trainingHeaders = Object.keys(trainingsInvoerRows[0] || {}).filter(key => !['speler_id', 'speler naam', 'speler_naam'].includes(String(key).toLowerCase()));
@@ -293,7 +334,26 @@ function hydrateFromImportedData() {
 
             data = structuredClone(defaultData);
             data.trainings = savedTrainings;
-            data.players = buildPlayersFromMatchData(imported.players, imported.matches);
+            const builtPlayers = buildPlayersFromMatchData(imported.players, imported.matches);
+            const importedByName = new Map(imported.players.map(player => [String(player.name).toLowerCase(), player]));
+            data.players = builtPlayers.map(player => {
+                const source = importedByName.get(String(player.name).toLowerCase());
+                if (!source) return player;
+                return {
+                    ...player,
+                    goals: Number(source.goals || 0),
+                    assists: Number(source.assists || 0),
+                    penalties: Number(source.penalties || 0),
+                    yellow: Number(source.yellow || 0),
+                    red: Number(source.red || 0),
+                    late: Number(source.late || 0),
+                    present: Number(source.present || 0),
+                    training: Number(source.training || player.training || 0),
+                    trainingTotal: Number(source.trainingTotal || player.trainingTotal || 0),
+                    attendance: Number(source.attendance || player.attendance || 0),
+                    attendanceTotal: Number(source.attendanceTotal || player.attendanceTotal || 0)
+                };
+            });
             data.matches = imported.matches;
             data.staff = imported.staff;
             data.spelerVanHetJaar = imported.spelerVanHetJaar;
@@ -507,40 +567,26 @@ function renderStatistics() {
 
     const sections = [];
 
-    const goals = players
-        .map(player => [player.name, Number(player.goals || 0)])
-        .filter(([, value]) => value > 0);
-    if (goals.length) {
-        sections.push(renderStatisticsCard('Doelpunten', 'Aantal doelpunten', goals));
-    }
+    const statGroups = [
+        { key: 'goals', title: 'Doelpunten', header: 'Aantal doelpunten', field: 'goals' },
+        { key: 'assists', title: 'Assists', header: 'Aantal assists', field: 'assists' },
+        { key: 'penalties', title: 'Penalties', header: 'Aantal penalties', field: 'penalties' },
+        { key: 'yellow', title: 'Gele kaarten', header: 'Aantal gele kaarten', field: 'yellow' },
+        { key: 'red', title: 'Rode kaarten', header: 'Aantal rode kaarten', field: 'red' },
+        { key: 'late', title: 'Te laat', header: 'Aantal te laat', field: 'late' },
+        { key: 'present', title: 'Aanwezig', header: 'Aantal aanwezig', field: 'present' }
+    ];
 
-    const assists = players
-        .map(player => [player.name, Number(player.assists || 0)])
-        .filter(([, value]) => value > 0);
-    if (assists.length) {
-        sections.push(renderStatisticsCard('Assists', 'Aantal assists', assists));
-    }
+    statGroups.forEach(group => {
+        const rows = players
+            .map(player => [player.name, Number(player[group.field] || 0)])
+            .filter(([, value]) => value > 0)
+            .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 
-    const penalties = players
-        .map(player => [player.name, Number(player.penalties || 0)])
-        .filter(([, value]) => value > 0);
-    if (penalties.length) {
-        sections.push(renderStatisticsCard('Penalty\'s', 'Aantal penalty\'s', penalties));
-    }
-
-    const yellow = players
-        .map(player => [player.name, Number(player.yellow || 0)])
-        .filter(([, value]) => value > 0);
-    if (yellow.length) {
-        sections.push(renderStatisticsCard('Gele kaarten', 'Aantal gele kaarten', yellow));
-    }
-
-    const red = players
-        .map(player => [player.name, Number(player.red || 0)])
-        .filter(([, value]) => value > 0);
-    if (red.length) {
-        sections.push(renderStatisticsCard('Rode kaarten', 'Aantal rode kaarten', red));
-    }
+        if (rows.length) {
+            sections.push(renderStatisticsCard(group.title, group.header, rows));
+        }
+    });
 
     container.innerHTML = sections.length
         ? sections.join('')
@@ -555,21 +601,25 @@ function renderStatisticsCard(title, header, rows) {
         <div class="card">
             <div class="card-header"><h3>${escapeHTML(title)}</h3></div>
             <div class="card-body">
-                ${renderStatisticsTable(['Speler', header], rows)}
+                ${renderStatisticsList(header, rows)}
             </div>
         </div>`;
 }
 
-function renderStatisticsTable(headers, rows) {
+function renderStatisticsList(header, rows) {
     if (!rows.length) {
         return '<div class="empty">Geen gegevens beschikbaar.</div>';
     }
 
-    return '<div class="table-wrapper"><table><thead><tr>'
-        + headers.map(header => '<th>' + escapeHTML(header) + '</th>').join('')
-        + '</tr></thead><tbody>'
-        + rows.map(row => '<tr>' + row.map(cell => '<td>' + escapeHTML(cell) + '</td>').join('') + '</tr>').join('')
-        + '</tbody></table></div>';
+    return '<div class="stat-list">'
+        + rows.map(row => {
+            const [player, value] = row;
+            return '<div class="stat-list-item">'
+                + '<div class="stat-list-player">' + escapeHTML(player) + '</div>'
+                + '<div class="stat-list-value">' + escapeHTML(value) + ' ' + escapeHTML(header) + '</div>'
+                + '</div>';
+        }).join('')
+        + '</div>';
 }
 
 function getGoalsByMatch(matches) {
@@ -586,11 +636,8 @@ function getAttendanceSummary() {
         const matchAttendance = Number(player.attendance || 0);
         const matchTotal = Number(player.attendanceTotal || 0);
 
-        const values = [];
-        if (trainingTotal > 0) values.push(training / trainingTotal);
-        if (matchTotal > 0) values.push(matchAttendance / matchTotal);
-
-        const percent = values.length ? Math.round((values.reduce((sum, value) => sum + value, 0) / values.length) * 100) : 0;
+        const trainingPercent = trainingTotal > 0 ? Math.round((training / trainingTotal) * 100) : 0;
+        const matchPercent = matchTotal > 0 ? Math.round((matchAttendance / matchTotal) * 100) : 0;
 
         return {
             name: player.name,
@@ -598,7 +645,8 @@ function getAttendanceSummary() {
             trainingTotal,
             matchAttendance,
             matchTotal,
-            percent
+            trainingPercent,
+            matchPercent
         };
     });
 }
@@ -609,7 +657,7 @@ function renderAttendance() {
         const rows = getAttendanceSummary().map(player => renderAttendanceRow(player));
         table.innerHTML = rows.length
             ? rows.join('')
-            : '<tr><td colspan="4"><div class="empty">Geen spelers gevonden.</div></td></tr>';
+            : '<tr><td colspan="5"><div class="empty">Geen spelers gevonden.</div></td></tr>';
     }
 
     renderCalendar();
@@ -620,7 +668,8 @@ function renderAttendanceRow(player) {
         + '<td>' + escapeHTML(player.name) + '</td>'
         + '<td>' + escapeHTML(player.training) + ' / ' + escapeHTML(player.trainingTotal || '–') + '</td>'
         + '<td>' + escapeHTML(player.matchAttendance) + ' / ' + escapeHTML(player.matchTotal || '–') + '</td>'
-        + '<td><strong>' + escapeHTML(player.percent) + '%</strong></td>'
+        + '<td><strong>' + escapeHTML(player.trainingPercent) + '%</strong></td>'
+        + '<td><strong>' + escapeHTML(player.matchPercent) + '%</strong></td>'
         + '</tr>';
 }
 
