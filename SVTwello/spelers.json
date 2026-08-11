@@ -1,0 +1,212 @@
+{
+  "spelers": [
+    {
+      "rugnummer": 22,
+      "naam": "Berry van der Scheer",
+      "positie": "Verdediger",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 99,
+      "naam": "Bram Dolman",
+      "positie": "Aanvaller",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 3,
+      "naam": "Casper van Brink",
+      "positie": "Verdediger",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 6,
+      "naam": "Delano de Vogel",
+      "positie": "Verdediger",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 1,
+      "naam": "Dennis Schreurs",
+      "positie": "Keeper",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 2,
+      "naam": "Dennis Witteveen",
+      "positie": "Verdediger",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 9,
+      "naam": "Glenn Buitenhuis",
+      "positie": "Aanvaller",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 77,
+      "naam": "Jani Setz",
+      "positie": "Aanvaller",
+      "voet": "links",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 12,
+      "naam": "Jasper Nijdeken",
+      "positie": "Middenvelder",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 13,
+      "naam": "Jean-Paul de Haas",
+      "positie": "Aanvaller",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 16,
+      "naam": "Jesse van Brink",
+      "positie": "Aanvaller",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 7,
+      "naam": "Jervin Leisink Meijer",
+      "positie": "Aanvaller",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 5,
+      "naam": "Jorn Oosting",
+      "positie": "Middenvelder",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 19,
+      "naam": "Koen Broekman",
+      "positie": "Middenvelder",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 4,
+      "naam": "Marc Albers",
+      "positie": "Verdediger",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 89,
+      "naam": "Nicky Eekhuis",
+      "positie": "Aanvaller",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 11,
+      "naam": "Niels Gijsberts",
+      "positie": "Middenvelder",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 14,
+      "naam": "Robbert Teelen",
+      "positie": "Middenvelder",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 10,
+      "naam": "Rodi Gerritsen",
+      "positie": "Middenvelder",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 17,
+      "naam": "Samwel Yuda Mkai",
+      "positie": "Aanvaller",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 15,
+      "naam": "Thijs Oldenboom",
+      "positie": "Bank",
+      "voet": "links",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": null,
+      "naam": "Thomas van Kooten",
+      "positie": "Verdediger",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 27,
+      "naam": "Tom Nijdeken",
+      "positie": "Middenvelder",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": 8,
+      "naam": "Tygo Vijge",
+      "positie": "Verdediger",
+      "voet": "rechts",
+      "gastspeler": false
+    },
+    {
+      "rugnummer": null,
+      "naam": "Stan Martens",
+      "positie": "Verdediger",
+      "voet": "rechts",
+      "gastspeler": true
+    },
+    {
+      "rugnummer": null,
+      "naam": "Denzel Boscher",
+      "positie": "Verdediger",
+      "voet": "rechts",
+      "gastspeler": true
+    }
+  ],
+  "staf": [
+    {
+      "naam": "Andrew Hietbrink",
+      "rol": "Hoofdcoach"
+    },
+    {
+      "naam": "Christiaan Göttgens",
+      "rol": "Teammanager / Technisch staflid"
+    },
+    {
+      "naam": "Jan Berkenbosch",
+      "rol": "Teammanager / Technisch staflid"
+    },
+    {
+      "naam": "Jean-Paul de Haas",
+      "rol": "Teammanager / Technisch staflid"
+    },
+    {
+      "naam": "Jeffrey Karrenbeld",
+      "rol": "Trainer / Assistent-coach"
+    },
+    {
+      "naam": "Sander Bouwmeester",
+      "rol": "Teamondersteuner / Technisch staflid"
+    }
+  ]
+}

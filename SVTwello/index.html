@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08783f">
+<title>SV Twello Zondag 2</title>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+
+<body>
+
+<header>
+
+<div class="header-inner">
+
+    <div class="brand">
+
+        <img
+            src="SV Twello_RGB.png"
+            alt="SV Twello logo"
+            class="logo"
+        >
+
+        <div>
+            <h1>SV Twello Zondag 2</h1>
+            <small>Teamdashboard</small>
+        </div>
+
+    </div>
+
+
+    <nav>
+
+        <button class="nav-btn active"
+                data-page="dashboard">
+            Dashboard
+        </button>
+
+        <button class="nav-btn"
+                data-page="spelers">
+            Team
+        </button>
+
+        <button class="nav-btn"
+                data-page="wedstrijden">
+            Wedstrijden
+        </button>
+
+        <button class="nav-btn"
+                data-page="aanwezigheid">
+            Aanwezigheid
+        </button>
+
+        <button class="nav-btn"
+                data-page="statistieken">
+            Statistieken
+        </button>
+
+    </nav>
+
+</div>
+
+</header>
+
+
+<main>
+
+
+<!-- =====================================
+     DASHBOARD
+====================================== -->
+
+<section id="dashboard" class="page active">
+
+    <div class="hero">
+
+        <h2>SV Twello Zondag 2</h2>
+
+        <p>
+            Spelers, trainingen, wedstrijden en
+            competitiestatistieken.
+        </p>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+        <div class="stat">
+            <div class="stat-label">Selectie</div>
+            <div class="stat-value"
+                 id="statPlayers">
+                0
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">Wedstrijden</div>
+            <div class="stat-value"
+                 id="statMatches">
+                0
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">Doelpunten</div>
+            <div class="stat-value"
+                 id="statGoals">
+                0
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">Gem. speelpercentage</div>
+            <div class="stat-value"
+                 id="statPercentage">
+                0%
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="grid-2">
+
+        <div class="card">
+
+            <div class="card-header">
+                <h3>Wedstrijden</h3>
+
+                <button class="btn secondary"
+                        onclick="showPage('wedstrijden')">
+                    Alles
+                </button>
+            </div>
+
+            <div class="card-body">
+
+                <div class="matches"
+                     id="dashboardMatches">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-header">
+                <h3>Topscorers</h3>
+            </div>
+
+            <div class="card-body">
+
+                <div id="topScorers"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card" style="margin-top:20px">
+
+        <div class="card-header">
+            <h3>🏆 Speler van het Jaar</h3>
+        </div>
+
+        <div class="card-body">
+            <div id="spelerVanHetJaar"
+                 style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px">
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     SPELERS
+====================================== -->
+
+<section id="spelers" class="page">
+
+    <div class="page-title">
+
+        <h2>Team</h2>
+
+        <p>
+            Overzicht van spelers, gastspelers en staf.
+        </p>
+
+    </div>
+
+
+    <div class="toolbar">
+
+        <input
+            id="playerSearch"
+            class="input"
+            placeholder="Zoek speler..."
+        >
+
+        <select id="positionFilter"
+                class="select">
+
+            <option value="all">
+                Alle posities
+            </option>
+
+            <option value="Keeper">
+                Keeper
+            </option>
+
+            <option value="Verdediger">
+                Verdediger
+            </option>
+
+            <option value="Middenvelder">
+                Middenvelder
+            </option>
+
+            <option value="Aanvaller">
+                Aanvaller
+            </option>
+
+        </select>
+
+        <select id="sortPlayers"
+                class="select">
+
+            <option value="number">
+                Rugnummer
+            </option>
+
+            <option value="name">
+                Naam
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                    <th>Rugnummer</th>
+                    <th>Naam</th>
+                    <th>Positie</th>
+                    <th>Leeftijd</th>
+                    <th>Voet</th>
+                </tr>
+            </thead>
+
+                <tbody id="playersTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-header">
+            <h3>Staf</h3>
+        </div>
+
+        <div class="card-body">
+            <div id="staffList" class="staff-list"></div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     WEDSTRIJDEN
+====================================== -->
+
+<section id="wedstrijden" class="page">
+
+    <div class="page-title">
+
+        <h2>Wedstrijden</h2>
+
+        <p>
+            Programma en gespeelde wedstrijden.
+        </p>
+
+    </div>
+
+
+    <div class="toolbar">
+
+        <select id="matchFilter"
+                class="select">
+
+            <option value="all">
+                Alle wedstrijden
+            </option>
+
+            <option value="played">
+                Gespeeld
+            </option>
+
+            <option value="upcoming">
+                Komend
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="matches"
+         id="matchesList">
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     AANWEZIGHEID
+====================================== -->
+
+<section id="aanwezigheid" class="page">
+
+    <div class="page-title">
+
+        <h2>Aanwezigheid</h2>
+
+        <p>
+            Trainings- en wedstrijdaanwezigheid bijhouden en teamkalender beheren.
+        </p>
+
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <div class="card-header">
+                <h3>Aanwezigheidsstatistiek</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Speler</th>
+                            <th>Training</th>
+                            <th>Wedstrijd</th>
+                            <th>% Aanw.</th>
+                        </tr>
+                        </thead>
+                        <tbody id="attendanceTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Teamkalender</h3>
+            </div>
+            <div class="card-body" id="calendarList"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Training toevoegen</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Naam training</label>
+                    <input id="trainingTitle" class="input" placeholder="Teamtraining" />
+                </div>
+                <div class="form-group">
+                    <label>Locatie</label>
+                    <input id="trainingLocation" class="input" placeholder="Sportpark" />
+                </div>
+                <div class="form-group">
+                    <label>Datum</label>
+                    <input id="trainingDate" class="input" type="date" />
+                </div>
+                <div class="form-group">
+                    <label>Tijd</label>
+                    <input id="trainingTime" class="input" type="time" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button id="saveTrainingBtn" class="btn green">Opslaan</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     STATISTIEKEN
+====================================== -->
+
+<section id="statistieken" class="page">
+
+    <div class="page-title">
+
+        <h2>Statistieken</h2>
+
+        <p>
+            Topscorers, assists en kaarten per speler.
+        </p>
+
+    </div>
+
+    <div class="stats-page-grid"
+         id="statisticsContent">
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Speler vergelijking</h3>
+        </div>
+        <div class="card-body comparison-panel">
+            <div class="comparison-selectors">
+                <label>
+                    Speler A
+                    <select id="comparePlayerA" class="select"></select>
+                </label>
+                <label>
+                    Speler B
+                    <select id="comparePlayerB" class="select"></select>
+                </label>
+            </div>
+            <div id="comparisonResult"></div>
+        </div>
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+<strong>SV Twello Zondag 2</strong>
+
+<br>
+
+<span>
+Teamdashboard
+</span>
+
+</footer>
+
+
+<div class="toast"
+     id="toast">
+    Opgeslagen
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
