@@ -150,7 +150,8 @@ function renderStaff() {
     container.innerHTML = '<div class="table-wrapper"><table><tbody>'
         + data.staff.map(member => {
             const age = member.geboortedatum ? ' (' + escapeHTML(calculateAge(member.geboortedatum) + ' jaar') + ')' : '';
-            return '<tr><td>' + escapeHTML(member.naam) + age + '</td></tr>';
+            const role = member.rol ? ' — ' + escapeHTML(member.rol) : '';
+            return '<tr><td>' + escapeHTML(member.naam) + role + age + '</td></tr>';
         }).join('')
         + '</tbody></table></div>';
 }
@@ -605,32 +606,44 @@ function renderAll() {
 }
 
 function buildPlayersFromMatchData(spelersData, wedstrijdenData) {
-    const players = (spelersData?.spelers || []).map(s => ({
-        number: s.rugnummer,
-        name: s.naam,
-        position: s.positie,
-        foot: s.voet || 'rechts',
-        birthdate: s.geboortedatum || '',
-        guest: Boolean(s.gastspeler),
+    const spelerLijst = Array.isArray(spelersData)
+        ? spelersData
+        : (spelersData?.spelers || spelersData?.players || []);
+
+    const players = spelerLijst.map(s => ({
+        number: s.rugnummer ?? s.number ?? s.nr ?? '',
+        name: s.naam || s.name || '',
+        position: s.positie || s.position || '',
+        foot: s.voet || s.foot || 'rechts',
+        birthdate: s.geboortedatum || s.birthdate || '',
+        guest: Boolean(s.gastspeler ?? s.guest),
         training: s.training ?? 0,
-        trainingTotal: s.trainingTotaal ?? 0,
-        attendance: s.wedstrijden ?? 0,
-        attendanceTotal: s.wedstrijdenTotaal ?? 0,
-        minutes: s.minuten ?? 0,
-        maxMinutes: s.minutenMax ?? 0,
-        goals: s.doelpunten ?? 0,
+        trainingTotal: s.trainingTotaal ?? s.trainingTotal ?? 0,
+        attendance: s.wedstrijden ?? s.attendance ?? 0,
+        attendanceTotal: s.wedstrijdenTotaal ?? s.attendanceTotal ?? 0,
+        minutes: s.minuten ?? s.minutes ?? 0,
+        maxMinutes: s.minutenMax ?? s.maxMinutes ?? 0,
+        goals: s.doelpunten ?? s.goals ?? 0,
         assists: s.assists ?? 0,
-        yellow: s.geelKaarten ?? 0,
-        red: s.roodKaarten ?? 0
+        yellow: s.geelKaarten ?? s.yellow ?? 0,
+        red: s.roodKaarten ?? s.red ?? 0
     }));
 
     const playersByName = new Map();
-    players.forEach(player => playersByName.set(player.name.toLowerCase(), player));
+    players.forEach(player => {
+        if (player.name) {
+            playersByName.set(player.name.toLowerCase(), player);
+        }
+    });
 
-    (wedstrijdenData?.wedstrijden || []).forEach(match => {
-        (match.doelpunten || []).forEach(event => {
-            const scorerName = String(event.speler || event.scorer || '').trim();
-            const assistName = String(event.assist || event.assistPlayer || '').trim();
+    const matchList = Array.isArray(wedstrijdenData)
+        ? wedstrijdenData
+        : (wedstrijdenData?.wedstrijden || wedstrijdenData?.matches || []);
+
+    matchList.forEach(match => {
+        (match.doelpunten || match.events || []).forEach(event => {
+            const scorerName = String(event.speler || event.scorer || event.player || '').trim();
+            const assistName = String(event.assist || event.assistPlayer || event.assistName || '').trim();
             if (!scorerName) return;
 
             const scorerKey = scorerName.toLowerCase();
@@ -690,38 +703,48 @@ Promise.all([
     fetch('speler-van-het-jaar.json').then(r => r.json()).catch(() => null),
     fetch('trainings.json').then(r => r.json()).catch(() => null)
 ]).then(([wedstrijden, spelers, svhj, trainings]) => {
-    if (wedstrijden?.wedstrijden) {
-        data.matches = wedstrijden.wedstrijden.map(w => {
+    const matchList = Array.isArray(wedstrijden)
+        ? wedstrijden
+        : (wedstrijden?.wedstrijden || []);
+
+    if (matchList.length) {
+        data.matches = matchList.map(w => {
             const isThuis = w.thuis === 'SV Twello 2';
-            const events = (w.doelpunten || []).map(event => ({
-                scorer: event.speler || event.scorer || '',
-                assist: event.assist || event.assistPlayer || '',
+            const events = (w.doelpunten || w.events || []).map(event => ({
+                scorer: event.speler || event.scorer || event.player || '',
+                assist: event.assist || event.assistPlayer || event.assistName || '',
                 minute: event.minuut || event.minute || ''
             }));
-            const cards = (w.kaarten || []).map(card => ({
-                player: card.speler || '',
+            const cards = (w.kaarten || w.cards || []).map(card => ({
+                player: card.speler || card.player || '',
                 type: String(card.type || '').toLowerCase()
             }));
 
             return {
                 id: w.id,
-                date: w.datum,
-                time: w.tijd,
-                opponent: isThuis ? w.uit : w.thuis,
+                date: w.datum || w.date,
+                time: w.tijd || w.time,
+                opponent: isThuis ? (w.uit || w.opponent) : (w.thuis || w.opponent),
                 location: isThuis ? 'Thuis' : 'Uit',
-                competition: w.competitie || 'Competitie',
-                score: w.uitslag || '',
+                competition: w.competitie || w.competition || 'Competitie',
+                score: w.uitslag || w.score || '',
                 events,
                 cards
             };
         });
     }
 
-    if (spelers?.spelers?.length || wedstrijden?.wedstrijden) {
+    const spelerLijst = Array.isArray(spelers)
+        ? spelers
+        : (spelers?.spelers || spelers?.players || []);
+
+    if (spelerLijst.length || matchList.length) {
         data.players = buildPlayersFromMatchData(spelers, wedstrijden);
     }
 
-    data.staff = spelers?.staf || [];
+    data.staff = Array.isArray(spelers?.staf)
+        ? spelers.staf
+        : (Array.isArray(spelers?.staff) ? spelers.staff : []);
     data.trainings = trainings?.trainings || [];
     if (svhj?.winnaars) {
         renderSpelerVanHetJaar(svhj.winnaars);
