@@ -57,8 +57,10 @@ def build_players_json():
             'rugnummer': row.get('rugnummer'),
             'naam': naam,
             'positie': row.get('positie') or '',
+            'status': row.get('Status') or '',
             'voet': normalize_foot(row.get('voet')),
             'gastspeler': parse_bool(row.get('gastspeler')),
+            'aanvoerder': parse_bool(row.get('aanvoerder')),
         })
 
     staf = []
@@ -88,11 +90,12 @@ def build_matches_json():
         match_id = row.get('wedstrijd_id')
         if not match_id:
             continue
-        entry = by_match.setdefault(match_id, {'doelpunten': [], 'kaarten': []})
+        entry = by_match.setdefault(match_id, {'doelpunten': [], 'assists': [], 'penalties': [], 'kaarten': []})
 
         speler_naam = row.get('speler_naam') or ''
         doelpunten = row.get('doelpunten')
         assists = row.get('assists')
+        penalty = row.get('penalty')
         geel = row.get('geel')
         rood = row.get('rood')
 
@@ -100,9 +103,17 @@ def build_matches_json():
             count = int(doelpunten)
             for _ in range(count):
                 event = {'speler': speler_naam}
-                if assists not in (None, '', 0):
-                    event['assist'] = ''
                 entry['doelpunten'].append(event)
+
+        if assists not in (None, '', 0):
+            count = int(assists)
+            for _ in range(count):
+                entry['assists'].append({'speler': speler_naam})
+
+        if penalty not in (None, '', 0):
+            count = int(penalty)
+            for _ in range(count):
+                entry['penalties'].append({'speler': speler_naam})
 
         if geel not in (None, '', 0):
             entry['kaarten'].append({'speler': speler_naam, 'type': 'geel'})
@@ -124,6 +135,8 @@ def build_matches_json():
             'uitslag': row.get('uitslag') or '',
             'competitie': row.get('competitie') or 'Competitie',
             'doelpunten': data.get('doelpunten', []),
+            'assists': data.get('assists', []),
+            'penalties': data.get('penalties', []),
             'kaarten': data.get('kaarten', []),
         })
 

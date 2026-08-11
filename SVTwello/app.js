@@ -127,14 +127,14 @@ function renderPlayers() {
 }
 
 function renderPlayerRow(player) {
-    const age = player.birthdate ? escapeHTML(calculateAge(player.birthdate) + ' jaar') : '–';
     const guest = player.guest ? ' <span class="badge guest">Gastspeler</span>' : '';
+    const captain = player.captain ? ' <span class="badge guest">C</span>' : '';
 
     return '<tr>'
         + '<td>' + escapeHTML(player.number || '—') + '</td>'
-        + '<td>' + escapeHTML(player.name) + guest + '</td>'
+        + '<td>' + escapeHTML(player.name) + guest + captain + '</td>'
         + '<td>' + escapeHTML(player.position || '—') + '</td>'
-        + '<td>' + age + '</td>'
+        + '<td>' + escapeHTML(player.status || '—') + '</td>'
         + '<td>' + escapeHTML(player.foot || 'rechts') + '</td>'
         + '</tr>';
 }
@@ -225,42 +225,60 @@ function renderStatistics() {
     if (!container) return;
 
     const players = [...data.players].sort((a, b) => a.name.localeCompare(b.name));
-    const goals = players.map(player => [player.name, player.goals || 0]);
-    const assists = players.map(player => [player.name, player.assists || 0]);
-    const yellow = players.map(player => [player.name, player.yellow || 0]);
-    const red = players.map(player => [player.name, player.red || 0]);
 
-    container.innerHTML = `
-        <div class="card">
-            <div class="card-header"><h3>Doelpunten</h3></div>
-            <div class="card-body">
-                ${renderStatisticsTable(['Speler', 'Aantal doelpunten'], goals)}
-            </div>
-        </div>
+    const sections = [];
 
-        <div class="card">
-            <div class="card-header"><h3>Assists</h3></div>
-            <div class="card-body">
-                ${renderStatisticsTable(['Speler', 'Aantal assists'], assists)}
-            </div>
-        </div>
+    const goals = players
+        .map(player => [player.name, Number(player.goals || 0)])
+        .filter(([, value]) => value > 0);
+    if (goals.length) {
+        sections.push(renderStatisticsCard('Doelpunten', 'Aantal doelpunten', goals));
+    }
 
-        <div class="card">
-            <div class="card-header"><h3>Gele kaarten</h3></div>
-            <div class="card-body">
-                ${renderStatisticsTable(['Speler', 'Aantal gele kaarten'], yellow)}
-            </div>
-        </div>
+    const assists = players
+        .map(player => [player.name, Number(player.assists || 0)])
+        .filter(([, value]) => value > 0);
+    if (assists.length) {
+        sections.push(renderStatisticsCard('Assists', 'Aantal assists', assists));
+    }
 
-        <div class="card">
-            <div class="card-header"><h3>Rode kaarten</h3></div>
-            <div class="card-body">
-                ${renderStatisticsTable(['Speler', 'Aantal rode kaarten'], red)}
-            </div>
-        </div>`;
+    const penalties = players
+        .map(player => [player.name, Number(player.penalties || 0)])
+        .filter(([, value]) => value > 0);
+    if (penalties.length) {
+        sections.push(renderStatisticsCard('Penalty\'s', 'Aantal penalty\'s', penalties));
+    }
+
+    const yellow = players
+        .map(player => [player.name, Number(player.yellow || 0)])
+        .filter(([, value]) => value > 0);
+    if (yellow.length) {
+        sections.push(renderStatisticsCard('Gele kaarten', 'Aantal gele kaarten', yellow));
+    }
+
+    const red = players
+        .map(player => [player.name, Number(player.red || 0)])
+        .filter(([, value]) => value > 0);
+    if (red.length) {
+        sections.push(renderStatisticsCard('Rode kaarten', 'Aantal rode kaarten', red));
+    }
+
+    container.innerHTML = sections.length
+        ? sections.join('')
+        : '<div class="card"><div class="card-body"><div class="empty">Geen statistische gegevens beschikbaar.</div></div></div>';
 
     populatePlayerComparisonOptions();
     renderPlayerComparison();
+}
+
+function renderStatisticsCard(title, header, rows) {
+    return `
+        <div class="card">
+            <div class="card-header"><h3>${escapeHTML(title)}</h3></div>
+            <div class="card-body">
+                ${renderStatisticsTable(['Speler', header], rows)}
+            </div>
+        </div>`;
 }
 
 function renderStatisticsTable(headers, rows) {
@@ -615,8 +633,10 @@ function buildPlayersFromMatchData(spelersData, wedstrijdenData) {
         name: s.naam || s.name || '',
         position: s.positie || s.position || '',
         foot: s.voet || s.foot || 'rechts',
+        status: s.status || s.Status || '',
         birthdate: s.geboortedatum || s.birthdate || '',
         guest: Boolean(s.gastspeler ?? s.guest),
+        captain: Boolean(s.aanvoerder ?? s.captain),
         training: s.training ?? 0,
         trainingTotal: s.trainingTotaal ?? s.trainingTotal ?? 0,
         attendance: s.wedstrijden ?? s.attendance ?? 0,
@@ -660,6 +680,7 @@ function buildPlayersFromMatchData(spelersData, wedstrijdenData) {
                     maxMinutes: 0,
                     goals: 0,
                     assists: 0,
+                    penalties: 0,
                     yellow: 0,
                     red: 0
                 });
@@ -682,6 +703,7 @@ function buildPlayersFromMatchData(spelersData, wedstrijdenData) {
                         maxMinutes: 0,
                         goals: 0,
                         assists: 0,
+                        penalties: 0,
                         yellow: 0,
                         red: 0
                     });
@@ -689,6 +711,58 @@ function buildPlayersFromMatchData(spelersData, wedstrijdenData) {
                 const assistPlayer = playersByName.get(assistKey);
                 assistPlayer.assists = Number(assistPlayer.assists || 0) + 1;
             }
+        });
+
+        (match.assists || []).forEach(event => {
+            const playerName = String(event.speler || event.player || '').trim();
+            if (!playerName) return;
+            const key = playerName.toLowerCase();
+            if (!playersByName.has(key)) {
+                playersByName.set(key, {
+                    number: playersByName.size + 1,
+                    name: playerName,
+                    position: 'Speler',
+                    training: 0,
+                    trainingTotal: 0,
+                    attendance: 0,
+                    attendanceTotal: 0,
+                    minutes: 0,
+                    maxMinutes: 0,
+                    goals: 0,
+                    assists: 0,
+                    penalties: 0,
+                    yellow: 0,
+                    red: 0
+                });
+            }
+            const player = playersByName.get(key);
+            player.assists = Number(player.assists || 0) + 1;
+        });
+
+        (match.penalties || []).forEach(event => {
+            const playerName = String(event.speler || event.player || '').trim();
+            if (!playerName) return;
+            const key = playerName.toLowerCase();
+            if (!playersByName.has(key)) {
+                playersByName.set(key, {
+                    number: playersByName.size + 1,
+                    name: playerName,
+                    position: 'Speler',
+                    training: 0,
+                    trainingTotal: 0,
+                    attendance: 0,
+                    attendanceTotal: 0,
+                    minutes: 0,
+                    maxMinutes: 0,
+                    goals: 0,
+                    assists: 0,
+                    penalties: 0,
+                    yellow: 0,
+                    red: 0
+                });
+            }
+            const player = playersByName.get(key);
+            player.penalties = Number(player.penalties || 0) + 1;
         });
     });
 
@@ -715,6 +789,12 @@ Promise.all([
                 assist: event.assist || event.assistPlayer || event.assistName || '',
                 minute: event.minuut || event.minute || ''
             }));
+            const assists = (w.assists || []).map(event => ({
+                player: event.speler || event.player || ''
+            }));
+            const penalties = (w.penalties || []).map(event => ({
+                player: event.speler || event.player || ''
+            }));
             const cards = (w.kaarten || w.cards || []).map(card => ({
                 player: card.speler || card.player || '',
                 type: String(card.type || '').toLowerCase()
@@ -729,6 +809,8 @@ Promise.all([
                 competition: w.competitie || w.competition || 'Competitie',
                 score: w.uitslag || w.score || '',
                 events,
+                assists,
+                penalties,
                 cards
             };
         });
