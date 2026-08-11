@@ -681,19 +681,15 @@ function renderStatisticsList(header, rows) {
         return '<div class="empty">Geen gegevens beschikbaar.</div>';
     }
 
-    return '<div class="stat-list">'
+    return '<div class="table-wrapper"><table><thead><tr>'
+        + '<th>Speler</th><th>' + escapeHTML(header) + '</th>'
+        + '</tr></thead><tbody>'
         + rows.map((row, index) => {
             const [player, value] = row;
-            const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
-            return '<div class="stat-list-item">'
-                + '<div class="stat-list-player">'
-                + (medal ? '<span class="stat-medal">' + escapeHTML(medal) + '</span>' : '')
-                + '<span>' + escapeHTML(player) + '</span>'
-                + '</div>'
-                + '<div class="stat-list-value">' + escapeHTML(value) + ' ' + escapeHTML(header) + '</div>'
-                + '</div>';
+            const medal = index === 0 ? ' 🥇' : index === 1 ? ' 🥈' : index === 2 ? ' 🥉' : '';
+            return '<tr><td>' + escapeHTML(player) + medal + '</td><td>' + escapeHTML(value) + '</td></tr>';
         }).join('')
-        + '</div>';
+        + '</tbody></table></div>';
 }
 
 function getGoalsByMatch(matches) {

@@ -327,40 +327,6 @@ main {
     background: var(--blue);
 }
 
-.stat-list {
-    display: grid;
-    gap: 10px;
-}
-
-.stat-list-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: linear-gradient(90deg, #f9fbfd 0%, #f4f8fe 100%);
-}
-
-.stat-list-player {
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.stat-medal {
-    font-size: 16px;
-    line-height: 1;
-}
-
-.stat-list-value {
-    color: var(--green);
-    font-weight: 700;
-    white-space: nowrap;
-}
-
 .table-wrapper {
     overflow-x: auto;
 }
