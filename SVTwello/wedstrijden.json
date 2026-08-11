@@ -2,39 +2,307 @@
   "team": "SV Twello 2",
   "seizoen": "2026/2027",
   "wedstrijden": [
-    { "id": "M623608225",  "datum": "2026-08-30", "tijd": "11:30", "thuis": "Voorwaarts T 5",       "uit": "SV Twello 2",          "uitslag": "0-2", "competitie": "Beker",
+    {
+      "id": "M623608225",
+      "datum": "2026-08-30",
+      "tijd": "11:30",
+      "thuis": "Voorwaarts T 5",
+      "uit": "SV Twello 2",
+      "uitslag": "0-3",
+      "competitie": "Beker",
       "doelpunten": [
-        { "speler": "Rodi Gerritsen", "assist": "Thijs Oldenboom", "minuut": 18 },
-        { "speler": "Rodi Gerritsen", "assist": "", "minuut": 74 }
+        {
+          "speler": "Dennis Schreurs"
+        },
+        {
+          "speler": "Glenn Buitenhuis"
+        },
+        {
+          "speler": "Jasper Nijdeken"
+        }
       ],
       "kaarten": [
-        { "speler": "Rodi Gerritsen", "type": "geel" },
-        { "speler": "Thijs Oldenboom", "type": "rood" }
+        {
+          "speler": "Dennis Schreurs",
+          "type": "geel"
+        },
+        {
+          "speler": "Jorn Oosting",
+          "type": "geel"
+        },
+        {
+          "speler": "Marc Albers",
+          "type": "geel"
+        },
+        {
+          "speler": "Niels Gijsberts",
+          "type": "rood"
+        }
       ]
     },
-    { "id": "M669057056",  "datum": "2026-09-06", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "Columbia 3",           "uitslag": "", "competitie": "Beker" },
-    { "id": "M1850179434", "datum": "2026-09-13", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "TKA 3",                "uitslag": "", "competitie": "Beker" },
-    { "id": "M1515636623", "datum": "2026-09-20", "tijd": "10:00", "thuis": "Epse 2",                "uit": "SV Twello 2",          "uitslag": "", "competitie": "Competitie" },
-    { "id": "M2063443898", "datum": "2026-09-27", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "Loenermark 3",         "uitslag": "", "competitie": "Competitie" },
-    { "id": "M1206364897", "datum": "2026-10-04", "tijd": "10:30", "thuis": "SC Klarenbeek 3",      "uit": "SV Twello 2",          "uitslag": "", "competitie": "Competitie" },
-    { "id": "M225330184",  "datum": "2026-10-11", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "WSV 4",                "uitslag": "", "competitie": "Competitie" },
-    { "id": "M1088968169", "datum": "2026-10-25", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "Sallandia 2",          "uitslag": "", "competitie": "Competitie" },
-    { "id": "M1528424591", "datum": "2026-11-01", "tijd": "11:30", "thuis": "TKA 2",                "uit": "SV Twello 2",          "uitslag": "", "competitie": "Competitie" },
-    { "id": "M472456096",  "datum": "2026-11-08", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "Heeten 5",             "uitslag": "", "competitie": "Competitie" },
-    { "id": "M1403218689", "datum": "2026-11-22", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "Voorwaarts T 5",       "uitslag": "", "competitie": "Competitie" },
-    { "id": "M377994332",  "datum": "2026-11-29", "tijd": "09:30", "thuis": "SV Schalkhaar 5",      "uit": "SV Twello 2",          "uitslag": "", "competitie": "Competitie" },
-    { "id": "M1742797366", "datum": "2026-12-06", "tijd": "11:30", "thuis": "Terwolde 2",            "uit": "SV Twello 2",          "uitslag": "", "competitie": "Competitie" },
-    { "id": "M1244967409", "datum": "2027-01-24", "tijd": "11:30", "thuis": "Loenermark 3",          "uit": "SV Twello 2",          "uitslag": "", "competitie": "Competitie" },
-    { "id": "M2050917256", "datum": "2027-01-31", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "Epse 2",               "uitslag": "", "competitie": "Competitie" },
-    { "id": "M1724910198", "datum": "2027-02-14", "tijd": "10:30", "thuis": "Sportclub Deventer 3",  "uit": "SV Twello 2",          "uitslag": "", "competitie": "Competitie" },
-    { "id": "M1013492571", "datum": "2027-03-07", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "SC Klarenbeek 3",      "uitslag": "", "competitie": "Competitie" },
-    { "id": "M834179945",  "datum": "2027-03-14", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "TKA 2",                "uitslag": "", "competitie": "Competitie" },
-    { "id": "M1498390619", "datum": "2027-03-21", "tijd": "10:30", "thuis": "Sallandia 2",           "uit": "SV Twello 2",          "uitslag": "", "competitie": "Competitie" },
-    { "id": "M270318139",  "datum": "2027-04-04", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "Sportclub Deventer 3", "uitslag": "", "competitie": "Competitie" },
-    { "id": "M1119557406", "datum": "2027-04-11", "tijd": "11:00", "thuis": "Heeten 5",              "uit": "SV Twello 2",          "uitslag": "", "competitie": "Competitie" },
-    { "id": "M1441709955", "datum": "2027-04-18", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "Terwolde 2",           "uitslag": "", "competitie": "Competitie" },
-    { "id": "M448610583",  "datum": "2027-04-25", "tijd": "11:30", "thuis": "WSV 4",                "uit": "SV Twello 2",          "uitslag": "", "competitie": "Competitie" },
-    { "id": "M877830509",  "datum": "2027-05-09", "tijd": "10:30", "thuis": "SV Twello 2",           "uit": "SV Schalkhaar 5",      "uitslag": "", "competitie": "Competitie" },
-    { "id": "M668121451",  "datum": "2027-05-23", "tijd": "11:30", "thuis": "Voorwaarts T 5",       "uit": "SV Twello 2",          "uitslag": "", "competitie": "Competitie" }
+    {
+      "id": "M669057056",
+      "datum": "2026-09-06",
+      "tijd": "10:30",
+      "thuis": "SV Twello 2",
+      "uit": "Columbia 3",
+      "uitslag": "",
+      "competitie": "Beker",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M1850179434",
+      "datum": "2026-09-13",
+      "tijd": "10:30",
+      "thuis": "SV Twello 2",
+      "uit": "TKA 3",
+      "uitslag": "",
+      "competitie": "Beker",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M1515636623",
+      "datum": "2026-09-20",
+      "tijd": "10:00",
+      "thuis": "Epse 2",
+      "uit": "SV Twello 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M2063443898",
+      "datum": "2026-09-27",
+      "tijd": "10:30",
+      "thuis": "SV Twello 2",
+      "uit": "Loenermark 3",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M1206364897",
+      "datum": "2026-10-04",
+      "tijd": "10:30",
+      "thuis": "SC Klarenbeek 3",
+      "uit": "SV Twello 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M225330184",
+      "datum": "2026-10-11",
+      "tijd": "10:30",
+      "thuis": "SV Twello 2",
+      "uit": "WSV 4",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M1088968169",
+      "datum": "2026-10-25",
+      "tijd": "10:30",
+      "thuis": "SV Twello 2",
+      "uit": "Sallandia 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M1528424591",
+      "datum": "2026-11-01",
+      "tijd": "11:30",
+      "thuis": "TKA 2",
+      "uit": "SV Twello 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M472456096",
+      "datum": "2026-11-08",
+      "tijd": "10:30",
+      "thuis": "SV Twello 2",
+      "uit": "Heeten 5",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M1403218689",
+      "datum": "2026-11-22",
+      "tijd": "10:30",
+      "thuis": "SV Twello 2",
+      "uit": "Voorwaarts T 5",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M377994332",
+      "datum": "2026-11-29",
+      "tijd": "09:30",
+      "thuis": "SV Schalkhaar 5",
+      "uit": "SV Twello 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M1742797366",
+      "datum": "2026-12-06",
+      "tijd": "11:30",
+      "thuis": "Terwolde 2",
+      "uit": "SV Twello 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M1244967409",
+      "datum": "2027-01-24",
+      "tijd": "11:30",
+      "thuis": "Loenermark 3",
+      "uit": "SV Twello 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M2050917256",
+      "datum": "2027-01-31",
+      "tijd": "10:30",
+      "thuis": "SV Twello 2",
+      "uit": "Epse 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M1724910198",
+      "datum": "2027-02-14",
+      "tijd": "10:30",
+      "thuis": "Sportclub Deventer 3",
+      "uit": "SV Twello 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M1013492571",
+      "datum": "2027-03-07",
+      "tijd": "10:30",
+      "thuis": "SV Twello 2",
+      "uit": "SC Klarenbeek 3",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M834179945",
+      "datum": "2027-03-14",
+      "tijd": "10:30",
+      "thuis": "SV Twello 2",
+      "uit": "TKA 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M1498390619",
+      "datum": "2027-03-21",
+      "tijd": "10:30",
+      "thuis": "Sallandia 2",
+      "uit": "SV Twello 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M270318139",
+      "datum": "2027-04-04",
+      "tijd": "10:30",
+      "thuis": "SV Twello 2",
+      "uit": "Sportclub Deventer 3",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M1119557406",
+      "datum": "2027-04-11",
+      "tijd": "11:00",
+      "thuis": "Heeten 5",
+      "uit": "SV Twello 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M1441709955",
+      "datum": "2027-04-18",
+      "tijd": "10:30",
+      "thuis": "SV Twello 2",
+      "uit": "Terwolde 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M448610583",
+      "datum": "2027-04-25",
+      "tijd": "11:30",
+      "thuis": "WSV 4",
+      "uit": "SV Twello 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M877830509",
+      "datum": "2027-05-09",
+      "tijd": "10:30",
+      "thuis": "SV Twello 2",
+      "uit": "SV Schalkhaar 5",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    },
+    {
+      "id": "M668121451",
+      "datum": "2027-05-23",
+      "tijd": "11:30",
+      "thuis": "Voorwaarts T 5",
+      "uit": "SV Twello 2",
+      "uitslag": "",
+      "competitie": "Competitie",
+      "doelpunten": [],
+      "kaarten": []
+    }
   ]
 }
