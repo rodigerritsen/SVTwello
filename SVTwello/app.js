@@ -57,6 +57,16 @@ function hasExplicitValue(value) {
     return value !== null && value !== undefined && String(value).trim() !== '';
 }
 
+function resolveMatchPresence(statusValue, aanwezigValue) {
+    const status = String(statusValue || '').trim().toLowerCase();
+    if (status) {
+        if (status.includes('afwezig')) return false;
+        if (status.includes('volledig') || status.includes('deels')) return true;
+        if (status.includes('niet gespeeld')) return false;
+    }
+    return parseTruthy(aanwezigValue);
+}
+
 function normalizeCellValue(value) {
     if (value instanceof Date) {
         const year = value.getFullYear();
@@ -195,7 +205,7 @@ function buildImportDataFromWorkbook(workbook) {
         const penaltyValue = row.penalty ?? row.penalties ?? '';
         const geelValue = row.geel ?? row.yellow ?? '';
         const roodValue = row.rood ?? row.red ?? '';
-        const teLaatValue = row['te laat'] ?? row.te_laat ?? '';
+        const teLaatValue = row['speler te laat'] ?? row['te laat'] ?? row.te_laat ?? '';
         const aanwezigValue = row.aanwezig ?? row.attendance ?? row.present ?? '';
         const doelpunten = parseNumber(doelpuntenValue);
         const assists = parseNumber(assistsValue);
@@ -204,6 +214,7 @@ function buildImportDataFromWorkbook(workbook) {
         const rood = parseNumber(roodValue);
         const teLaat = teLaatValue;
         const status = row.status || '';
+        const isPresent = resolveMatchPresence(status, aanwezigValue);
 
         const playerKey = spelerNaam.toLowerCase();
         const stats = statsByPlayer[playerKey] || { goals: 0, assists: 0, penalties: 0, yellow: 0, red: 0, late: 0, present: 0 };
@@ -229,7 +240,7 @@ function buildImportDataFromWorkbook(workbook) {
         stats.yellow += geel;
         stats.red += rood;
         stats.late += parseNumber(teLaat);
-        if (parseTruthy(aanwezigValue)) {
+        if (isPresent) {
             stats.present += 1;
         }
         statsByPlayer[playerKey] = stats;
@@ -324,7 +335,7 @@ function buildImportDataFromWorkbook(workbook) {
             const key = playerName.toLowerCase();
             const aanwezigValue = row.aanwezig ?? row.attendance ?? row.present ?? '';
             attendanceTotals[key] = (attendanceTotals[key] || 0) + 1;
-            if (parseTruthy(aanwezigValue)) {
+            if (resolveMatchPresence(row.status, aanwezigValue)) {
                 attendanceCounts[key] = (attendanceCounts[key] || 0) + 1;
             }
         });
@@ -369,7 +380,6 @@ function hydrateFromImportedData() {
     if (!window.XLSX) {
         data = structuredClone(defaultData);
         data.trainings = savedTrainings;
-        setupAttendanceControls();
         renderAll();
         return;
     }
@@ -418,13 +428,11 @@ function hydrateFromImportedData() {
             data.team = imported.team;
             data.seizoen = imported.seizoen;
 
-            setupAttendanceControls();
             renderAll();
         })
         .catch(() => {
             data = structuredClone(defaultData);
             data.trainings = savedTrainings;
-            setupAttendanceControls();
             renderAll();
         });
 }
@@ -844,39 +852,6 @@ function renderCalendar() {
             + '<div class="calendar-meta">' + details + '</div>'
             + '</div>';
     }).join('');
-}
-
-function setupAttendanceControls() {
-    const button = document.getElementById('saveTrainingBtn');
-    if (!button) return;
-
-    button.addEventListener('click', () => {
-        const title = document.getElementById('trainingTitle')?.value.trim();
-        const location = document.getElementById('trainingLocation')?.value.trim();
-        const date = document.getElementById('trainingDate')?.value;
-        const time = document.getElementById('trainingTime')?.value;
-
-        if (!title || !date || !time) {
-            showToast('Vul titel, datum en tijd in.');
-            return;
-        }
-
-        data.trainings = data.trainings || [];
-        data.trainings.push({
-            id: Date.now(),
-            title,
-            location: location || 'Teamtraining',
-            date,
-            time
-        });
-
-        document.getElementById('trainingTitle').value = '';
-        document.getElementById('trainingLocation').value = '';
-        document.getElementById('trainingDate').value = '';
-        document.getElementById('trainingTime').value = '';
-
-        saveData();
-    });
 }
 
 function getCardsTrend(matches) {
