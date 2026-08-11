@@ -280,10 +280,13 @@ def build_players_json():
         'team': matches_payload['team'],
         'seizoen': matches_payload['seizoen'],
         'wedstrijden': matches_payload['wedstrijden'],
+        'spelerVanHetJaar': [
+            {'jaar': 2026, 'naam': 'Rodi Gerritsen'},
+            {'jaar': 2025, 'naam': 'Jesse van Brink'},
+            {'jaar': 2024, 'naam': 'Marc Albers'},
+        ],
     }
-    data_js = "window.svTwelloZondag2Data = " + json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
-    (BASE / 'data.js').write_text(data_js, encoding='utf-8')
-    print(f'Wrote {len(spelers)} players, {len(staf)} staff members and {len(matches_payload["wedstrijden"])} matches to data.js')
+    print(f'Imported {len(spelers)} players, {len(staf)} staff members and {len(matches_payload["wedstrijden"])} matches from the Excel workbook; no generated JSON or JS data files are used.')
 
 
 if __name__ == '__main__':

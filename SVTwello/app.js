@@ -12,10 +12,6 @@ const defaultData = {
 
 let data;
 
-function getImportedData() {
-    return window.svTwelloZondag2Data || null;
-}
-
 function loadData() {
     const saved = localStorage.getItem('svTwelloZondag2');
 
@@ -28,12 +24,291 @@ function loadData() {
     } else {
         data = structuredClone(defaultData);
     }
+
+    if (!Array.isArray(data.players)) data.players = [];
+    if (!Array.isArray(data.matches)) data.matches = [];
+    if (!Array.isArray(data.staff)) data.staff = [];
+    if (!Array.isArray(data.trainings)) data.trainings = [];
+    if (!Array.isArray(data.spelerVanHetJaar)) data.spelerVanHetJaar = [];
 }
 
 function saveData() {
     localStorage.setItem('svTwelloZondag2', JSON.stringify(data));
     showToast('Gegevens opgeslagen');
     renderAll();
+}
+
+function parseTruthy(value) {
+    if (value === null || value === undefined || value === '') return false;
+    if (typeof value === 'boolean') return value;
+    if (typeof value === 'number') return value !== 0;
+    return String(value).trim().toLowerCase() in ['ja', 'yes', 'true', '1', 'x', 'y'];
+}
+
+function parseNumber(value) {
+    if (value === null || value === undefined || value === '') return 0;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function normalizeCellValue(value) {
+    if (value instanceof Date) {
+        const year = value.getFullYear();
+        const month = String(value.getMonth() + 1).padStart(2, '0');
+        const day = String(value.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    if (value === null || value === undefined) return '';
+    return value;
+}
+
+function parseDateTime(value) {
+    if (!value) return null;
+    if (value instanceof Date) return value;
+    if (typeof value === 'string') {
+        const text = value.trim();
+        if (!text) return null;
+        const direct = new Date(text);
+        if (!Number.isNaN(direct.getTime())) return direct;
+        const withTime = new Date(text.replace(' ', 'T'));
+        if (!Number.isNaN(withTime.getTime())) return withTime;
+    }
+    return null;
+}
+
+function isCompletedEvent(dateValue, timeValue) {
+    if (!dateValue && !timeValue) return true;
+    const combined = [dateValue, timeValue].filter(Boolean).join(' ');
+    if (!combined) return true;
+    const parsed = parseDateTime(combined);
+    if (!parsed) return true;
+    return parsed <= new Date();
+}
+
+function getSheetRows(workbook, sheetName) {
+    const sheet = workbook?.Sheets?.[sheetName];
+    if (!sheet) return [];
+    return XLSX.utils.sheet_to_json(sheet, { defval: '', raw: false }).map(row => {
+        const normalized = {};
+        Object.entries(row).forEach(([key, value]) => {
+            normalized[key] = normalizeCellValue(value);
+        });
+        return normalized;
+    });
+}
+
+function buildImportDataFromWorkbook(workbook) {
+    const spelersRows = getSheetRows(workbook, 'spelers');
+    const stafRows = getSheetRows(workbook, 'staf');
+    const wedstrijdenRows = getSheetRows(workbook, 'wedstrijden');
+    const wedstrijdInvoerRows = getSheetRows(workbook, 'wedstrijdinvoer');
+    const trainingsInvoerRows = getSheetRows(workbook, 'trainingsinvoer');
+    const spelerVanHetJaarRows = getSheetRows(workbook, 'speler_van_het_jaar');
+
+    const players = spelersRows
+        .filter(row => row.naam || row.name)
+        .map(row => ({
+            number: row.rugnummer ?? row.number ?? '',
+            name: row.naam || row.name || '',
+            position: row.positie || row.position || '',
+            foot: row.voet || row.foot || 'rechts',
+            status: row.Status || row.status || '',
+            guest: parseTruthy(row.gastspeler ?? row.guest),
+            captain: parseTruthy(row.aanvoerder ?? row.captain),
+            training: 0,
+            trainingTotal: 0,
+            attendance: 0,
+            attendanceTotal: 0,
+            minutes: 0,
+            maxMinutes: 0,
+            goals: 0,
+            assists: 0,
+            penalties: 0,
+            yellow: 0,
+            red: 0
+        }));
+
+    const playerLookup = new Map();
+    players.forEach(player => {
+        if (player.name) {
+            playerLookup.set(player.name.toLowerCase(), player);
+        }
+    });
+
+    const completedMatchIds = new Set(
+        wedstrijdenRows
+            .filter(row => isCompletedEvent(row.datum, row.tijd))
+            .map(row => String(row.wedstrijd_id || row.match_id || '').trim())
+            .filter(Boolean)
+    );
+
+    const byMatch = {};
+    wedstrijdInvoerRows.forEach(row => {
+        const matchId = String(row.wedstrijd_id || row.match_id || '').trim();
+        if (!matchId || !completedMatchIds.has(matchId)) return;
+
+        const entry = byMatch[matchId] || {
+            doelpunten: [],
+            assists: [],
+            penalties: [],
+            kaarten: [],
+            statussen: [],
+            te_laat: []
+        };
+
+        const spelerNaam = String(row.speler_naam || row.speler || '').trim();
+        const doelpunten = parseNumber(row.doelpunten || row.goals || 0);
+        const assists = parseNumber(row.assists || row.assist || 0);
+        const penalty = parseNumber(row.penalty || row.penalties || 0);
+        const geel = parseNumber(row.geel || row.yellow || 0);
+        const rood = parseNumber(row.rood || row.red || 0);
+        const teLaat = row['te laat'] ?? row.te_laat ?? '';
+        const status = row.status || '';
+
+        for (let i = 0; i < doelpunten; i += 1) entry.doelpunten.push({ speler: spelerNaam });
+        for (let i = 0; i < assists; i += 1) entry.assists.push({ speler: spelerNaam });
+        for (let i = 0; i < penalty; i += 1) entry.penalties.push({ speler: spelerNaam });
+        if (geel > 0) entry.kaarten.push({ speler: spelerNaam, type: 'geel' });
+        if (rood > 0) entry.kaarten.push({ speler: spelerNaam, type: 'rood' });
+        if (teLaat !== '' && teLaat !== 0) entry.te_laat.push({ speler: spelerNaam, waarde: teLaat });
+        if (status) entry.statussen.push({ speler: spelerNaam, status });
+
+        byMatch[matchId] = entry;
+    });
+
+    const matches = wedstrijdenRows
+        .filter(row => String(row.wedstrijd_id || row.match_id || '').trim())
+        .map(row => {
+            const matchId = String(row.wedstrijd_id || row.match_id || '').trim();
+            const data = byMatch[matchId] || {};
+            const isThuis = String(row.thuis || '').trim() === 'SV Twello 2';
+            const dateValue = row.datum || row.date || '';
+            const timeValue = row.tijd || row.time || '';
+
+            return {
+                id: matchId,
+                date: dateValue,
+                time: timeValue,
+                opponent: isThuis ? (row.uit || row.opponent || '') : (row.thuis || row.opponent || ''),
+                location: isThuis ? 'Thuis' : 'Uit',
+                competition: row.competitie || row.competition || 'Competitie',
+                score: row.uitslag || row.score || '',
+                events: (data.doelpunten || []).map(event => ({
+                    scorer: event.speler || '',
+                    assist: '',
+                    minute: ''
+                })),
+                assists: data.assists || [],
+                penalties: data.penalties || [],
+                cards: data.kaarten || []
+            };
+        });
+
+    if (trainingsInvoerRows.length) {
+        const trainingHeaders = Object.keys(trainingsInvoerRows[0] || {}).filter(key => !['speler_id', 'speler naam', 'speler_naam'].includes(String(key).toLowerCase()));
+        const completedTrainingHeaders = trainingHeaders.filter(header => isCompletedEvent(header));
+        trainingsInvoerRows.forEach(row => {
+            const playerName = String(row['speler naam'] || row.speler_naam || row.naam || '').trim();
+            const player = playerLookup.get(playerName.toLowerCase());
+            if (!player) return;
+
+            let attended = 0;
+            completedTrainingHeaders.forEach(header => {
+                if (parseTruthy(row[header])) attended += 1;
+            });
+
+            player.training = attended;
+            player.trainingTotal = completedTrainingHeaders.length;
+        });
+    }
+
+    if (wedstrijdInvoerRows.length) {
+        const attendanceTotals = {};
+        const attendanceCounts = {};
+        wedstrijdInvoerRows.forEach(row => {
+            const matchId = String(row.wedstrijd_id || row.match_id || '').trim();
+            if (!matchId || !completedMatchIds.has(matchId)) return;
+            const playerName = String(row.speler_naam || row.speler || '').trim();
+            if (!playerName) return;
+            const key = playerName.toLowerCase();
+            attendanceTotals[key] = (attendanceTotals[key] || 0) + 1;
+            if (parseTruthy(row.aanwezig || row.attendance || row.present)) {
+                attendanceCounts[key] = (attendanceCounts[key] || 0) + 1;
+            }
+        });
+
+        playerLookup.forEach((player, key) => {
+            player.attendance = attendanceCounts[key] || 0;
+            player.attendanceTotal = attendanceTotals[key] || 0;
+        });
+    }
+
+    return {
+        players,
+        matches,
+        staff: stafRows.filter(row => row.naam || row.name).map(row => ({
+            naam: row.naam || row.name || '',
+            rol: row.rol || row.role || ''
+        })),
+        spelerVanHetJaar: spelerVanHetJaarRows
+            .filter(row => row.jaar || row.year || row.naam || row.name)
+            .map(row => ({
+                jaar: parseNumber(row.jaar || row.year || 0),
+                naam: row.naam || row.name || ''
+            })),
+        team: 'SV Twello 2',
+        seizoen: '2026/2027'
+    };
+}
+
+function hydrateFromImportedData() {
+    const stored = localStorage.getItem('svTwelloZondag2');
+    let savedTrainings = [];
+
+    if (stored) {
+        try {
+            const parsed = JSON.parse(stored);
+            savedTrainings = Array.isArray(parsed?.trainings) ? parsed.trainings : [];
+        } catch {
+            savedTrainings = [];
+        }
+    }
+
+    if (!window.XLSX) {
+        data = structuredClone(defaultData);
+        data.trainings = savedTrainings;
+        setupAttendanceControls();
+        renderAll();
+        return;
+    }
+
+    fetch('zondag2.xlsx')
+        .then(response => {
+            if (!response.ok) throw new Error('Workbook kon niet worden geladen');
+            return response.arrayBuffer();
+        })
+        .then(buffer => {
+            const workbook = XLSX.read(buffer, { type: 'array' });
+            const imported = buildImportDataFromWorkbook(workbook);
+
+            data = structuredClone(defaultData);
+            data.trainings = savedTrainings;
+            data.players = buildPlayersFromMatchData(imported.players, imported.matches);
+            data.matches = imported.matches;
+            data.staff = imported.staff;
+            data.spelerVanHetJaar = imported.spelerVanHetJaar;
+            data.team = imported.team;
+            data.seizoen = imported.seizoen;
+
+            setupAttendanceControls();
+            renderAll();
+        })
+        .catch(() => {
+            data = structuredClone(defaultData);
+            data.trainings = savedTrainings;
+            setupAttendanceControls();
+            renderAll();
+        });
 }
 
 /* =====================================================
@@ -618,6 +893,26 @@ function showToast(message) {
     setTimeout(() => toast.classList.remove('show'), 2200);
 }
 
+function renderSpelerVanHetJaarPage() {
+    const container = document.getElementById('spelerVanHetJaarList');
+    if (!container) return;
+
+    const winnaars = Array.isArray(data.spelerVanHetJaar)
+        ? data.spelerVanHetJaar
+        : [];
+
+    if (!winnaars.length) {
+        container.innerHTML = '<div class="empty">Geen winnaars bekend.</div>';
+        return;
+    }
+
+    container.innerHTML = '<div class="table-wrapper"><table><tbody>'
+        + winnaars.slice().sort((a, b) => b.jaar - a.jaar).map(winner => {
+            return '<tr><td><strong>' + escapeHTML(winner.jaar) + '</strong></td><td>' + escapeHTML(winner.naam) + '</td></tr>';
+        }).join('')
+        + '</tbody></table></div>';
+}
+
 function renderAll() {
     renderDashboard();
     renderPlayers();
@@ -625,6 +920,8 @@ function renderAll() {
     renderMatches();
     renderAttendance();
     renderStatistics();
+    renderSpelerVanHetJaar(data.spelerVanHetJaar);
+    renderSpelerVanHetJaarPage();
 }
 
 function buildPlayersFromMatchData(spelersData, wedstrijdenData) {
@@ -774,81 +1071,4 @@ function buildPlayersFromMatchData(spelersData, wedstrijdenData) {
 }
 
 loadData();
-
-function hydrateFromImportedData() {
-    const source = getImportedData();
-    const hasSavedData = Boolean(localStorage.getItem('svTwelloZondag2'));
-
-    if (!source) {
-        setupAttendanceControls();
-        renderAll();
-        return;
-    }
-
-    if (hasSavedData) {
-        setupAttendanceControls();
-        renderAll();
-        return;
-    }
-
-    const matchListResolved = Array.isArray(source?.wedstrijden)
-        ? source.wedstrijden
-        : [];
-
-    if (matchListResolved.length) {
-        data.matches = matchListResolved.map(w => {
-            const isThuis = w.thuis === 'SV Twello 2';
-            const events = (w.doelpunten || w.events || []).map(event => ({
-                scorer: event.speler || event.scorer || event.player || '',
-                assist: event.assist || event.assistPlayer || event.assistName || '',
-                minute: event.minuut || event.minute || ''
-            }));
-            const assists = (w.assists || []).map(event => ({
-                player: event.speler || event.player || ''
-            }));
-            const penalties = (w.penalties || []).map(event => ({
-                player: event.speler || event.player || ''
-            }));
-            const cards = (w.kaarten || w.cards || []).map(card => ({
-                player: card.speler || card.player || '',
-                type: String(card.type || '').toLowerCase()
-            }));
-
-            return {
-                id: w.id,
-                date: w.datum || w.date,
-                time: w.tijd || w.time,
-                opponent: isThuis ? (w.uit || w.opponent) : (w.thuis || w.opponent),
-                location: isThuis ? 'Thuis' : 'Uit',
-                competition: w.competitie || w.competition || 'Competitie',
-                score: w.uitslag || w.score || '',
-                events,
-                assists,
-                penalties,
-                cards
-            };
-        });
-    } else {
-        data.matches = [];
-    }
-
-    const spelerLijst = Array.isArray(source)
-        ? source
-        : (source?.spelers || source?.players || []);
-
-    if (spelerLijst.length || matchListResolved.length) {
-        data.players = buildPlayersFromMatchData(source, matchListResolved);
-    } else {
-        data.players = [];
-    }
-
-    data.staff = Array.isArray(source?.staf)
-        ? source.staf
-        : (Array.isArray(source?.staff) ? source.staff : []);
-    data.trainings = Array.isArray(source?.trainings) ? source.trainings : [];
-
-    setupAttendanceControls();
-    renderAll();
-}
-
 hydrateFromImportedData();

@@ -12,7 +12,7 @@
 
 <body>
 
-<script src="data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.1/dist/xlsx.full.min.js"></script>
 
 <header>
 
@@ -59,6 +59,11 @@
         <button class="nav-btn"
                 data-page="statistieken">
             Statistieken
+        </button>
+
+        <button class="nav-btn"
+                data-page="speler-van-het-jaar">
+            Speler van het jaar
         </button>
 
     </nav>
@@ -441,6 +446,33 @@
                 </label>
             </div>
             <div id="comparisonResult"></div>
+        </div>
+    </div>
+
+</section>
+
+<!-- =====================================
+     SPELER VAN HET JAAR
+====================================== -->
+
+<section id="speler-van-het-jaar" class="page">
+
+    <div class="page-title">
+
+        <h2>Speler van het jaar</h2>
+
+        <p>
+            Historische winnaars per seizoen.
+        </p>
+
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Winnaars</h3>
+        </div>
+        <div class="card-body">
+            <div id="spelerVanHetJaarList" class="staff-list"></div>
         </div>
     </div>
 
