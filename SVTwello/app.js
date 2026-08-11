@@ -320,8 +320,9 @@ function buildImportDataFromWorkbook(workbook) {
             const playerName = String(row.speler_naam || row.speler || '').trim();
             if (!playerName) return;
             const key = playerName.toLowerCase();
+            const aanwezigValue = row.aanwezig ?? row.attendance ?? row.present ?? '';
             attendanceTotals[key] = (attendanceTotals[key] || 0) + 1;
-            if (parseTruthy(row.aanwezig || row.attendance || row.present)) {
+            if (parseTruthy(aanwezigValue)) {
                 attendanceCounts[key] = (attendanceCounts[key] || 0) + 1;
             }
         });
