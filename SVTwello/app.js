@@ -772,17 +772,31 @@ function buildPlayersFromMatchData(spelersData, wedstrijdenData) {
 loadData();
 
 Promise.all([
-    fetch('wedstrijden.json').then(r => r.json()).catch(() => null),
     fetch('spelers.json').then(r => r.json()).catch(() => null),
     fetch('speler-van-het-jaar.json').then(r => r.json()).catch(() => null),
     fetch('trainings.json').then(r => r.json()).catch(() => null)
-]).then(([wedstrijden, spelers, svhj, trainings]) => {
-    const matchList = Array.isArray(wedstrijden)
+]).then(([spelers, svhj, trainings]) => {
+    const matchList = [];
+    const wedstrijden = [];
+
+    if (spelers?.wedstrijden) {
+        wedstrijden.push(...spelers.wedstrijden);
+    }
+
+    if (Array.isArray(spelers)) {
+        wedstrijden.push(...spelers);
+    }
+
+    const resolvedMatches = Array.isArray(wedstrijden)
         ? wedstrijden
         : (wedstrijden?.wedstrijden || []);
 
-    if (matchList.length) {
-        data.matches = matchList.map(w => {
+    const matchListResolved = Array.isArray(resolvedMatches)
+        ? resolvedMatches
+        : [];
+
+    if (matchListResolved.length) {
+        data.matches = matchListResolved.map(w => {
             const isThuis = w.thuis === 'SV Twello 2';
             const events = (w.doelpunten || w.events || []).map(event => ({
                 scorer: event.speler || event.scorer || event.player || '',
@@ -820,8 +834,8 @@ Promise.all([
         ? spelers
         : (spelers?.spelers || spelers?.players || []);
 
-    if (spelerLijst.length || matchList.length) {
-        data.players = buildPlayersFromMatchData(spelers, wedstrijden);
+    if (spelerLijst.length || matchListResolved.length) {
+        data.players = buildPlayersFromMatchData(spelers, resolvedMatches);
     }
 
     data.staff = Array.isArray(spelers?.staf)

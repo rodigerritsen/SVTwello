@@ -90,7 +90,14 @@ def build_matches_json():
         match_id = row.get('wedstrijd_id')
         if not match_id:
             continue
-        entry = by_match.setdefault(match_id, {'doelpunten': [], 'assists': [], 'penalties': [], 'kaarten': []})
+        entry = by_match.setdefault(match_id, {
+            'doelpunten': [],
+            'assists': [],
+            'penalties': [],
+            'kaarten': [],
+            'statussen': [],
+            'te_laat': []
+        })
 
         speler_naam = row.get('speler_naam') or ''
         doelpunten = row.get('doelpunten')
@@ -98,6 +105,8 @@ def build_matches_json():
         penalty = row.get('penalty')
         geel = row.get('geel')
         rood = row.get('rood')
+        te_laat = row.get('te laat')
+        status = row.get('status')
 
         if doelpunten not in (None, '', 0):
             count = int(doelpunten)
@@ -119,6 +128,10 @@ def build_matches_json():
             entry['kaarten'].append({'speler': speler_naam, 'type': 'geel'})
         if rood not in (None, '', 0):
             entry['kaarten'].append({'speler': speler_naam, 'type': 'rood'})
+        if te_laat not in (None, '', 0):
+            entry['te_laat'].append({'speler': speler_naam, 'waarde': te_laat})
+        if status not in (None, '', 0):
+            entry['statussen'].append({'speler': speler_naam, 'status': status})
 
     wedstrijden = []
     for row in wedstrijden_rows:
@@ -138,6 +151,8 @@ def build_matches_json():
             'assists': data.get('assists', []),
             'penalties': data.get('penalties', []),
             'kaarten': data.get('kaarten', []),
+            'te_laat': data.get('te_laat', []),
+            'statussen': data.get('statussen', []),
         })
 
     payload = {
