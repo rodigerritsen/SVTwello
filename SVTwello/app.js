@@ -12,6 +12,10 @@ const defaultData = {
 
 let data;
 
+function getImportedData() {
+    return window.svTwelloZondag2Data || null;
+}
+
 function loadData() {
     const saved = localStorage.getItem('svTwelloZondag2');
 
@@ -771,27 +775,24 @@ function buildPlayersFromMatchData(spelersData, wedstrijdenData) {
 
 loadData();
 
-Promise.all([
-    fetch('spelers.json').then(r => r.json()).catch(() => null),
-    fetch('trainings.json').then(r => r.json()).catch(() => null)
-]).then(([spelers, trainings]) => {
-    const matchList = [];
-    const wedstrijden = [];
+function hydrateFromImportedData() {
+    const source = getImportedData();
+    const hasSavedData = Boolean(localStorage.getItem('svTwelloZondag2'));
 
-    if (spelers?.wedstrijden) {
-        wedstrijden.push(...spelers.wedstrijden);
+    if (!source) {
+        setupAttendanceControls();
+        renderAll();
+        return;
     }
 
-    if (Array.isArray(spelers)) {
-        wedstrijden.push(...spelers);
+    if (hasSavedData) {
+        setupAttendanceControls();
+        renderAll();
+        return;
     }
 
-    const resolvedMatches = Array.isArray(wedstrijden)
-        ? wedstrijden
-        : (wedstrijden?.wedstrijden || []);
-
-    const matchListResolved = Array.isArray(resolvedMatches)
-        ? resolvedMatches
+    const matchListResolved = Array.isArray(source?.wedstrijden)
+        ? source.wedstrijden
         : [];
 
     if (matchListResolved.length) {
@@ -827,23 +828,27 @@ Promise.all([
                 cards
             };
         });
+    } else {
+        data.matches = [];
     }
 
-    const spelerLijst = Array.isArray(spelers)
-        ? spelers
-        : (spelers?.spelers || spelers?.players || []);
+    const spelerLijst = Array.isArray(source)
+        ? source
+        : (source?.spelers || source?.players || []);
 
     if (spelerLijst.length || matchListResolved.length) {
-        data.players = buildPlayersFromMatchData(spelers, resolvedMatches);
+        data.players = buildPlayersFromMatchData(source, matchListResolved);
+    } else {
+        data.players = [];
     }
 
-    data.staff = Array.isArray(spelers?.staf)
-        ? spelers.staf
-        : (Array.isArray(spelers?.staff) ? spelers.staff : []);
-    data.trainings = trainings?.trainings || [];
+    data.staff = Array.isArray(source?.staf)
+        ? source.staf
+        : (Array.isArray(source?.staff) ? source.staff : []);
+    data.trainings = Array.isArray(source?.trainings) ? source.trainings : [];
+
     setupAttendanceControls();
     renderAll();
-}).catch(() => {
-    setupAttendanceControls();
-    renderAll();
-});
+}
+
+hydrateFromImportedData();

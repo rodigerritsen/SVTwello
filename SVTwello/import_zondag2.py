@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+from datetime import date, datetime
 from openpyxl import load_workbook
 
 BASE = Path(__file__).resolve().parent
@@ -35,6 +36,61 @@ def normalize_foot(value):
     return 'rechts'
 
 
+def parse_datetime(value):
+    if value is None:
+        return None
+    if isinstance(value, datetime):
+        return value
+    if isinstance(value, date):
+        return datetime.combine(value, datetime.min.time())
+    if isinstance(value, str):
+        text = value.strip()
+        if not text:
+            return None
+        for fmt in ('%Y-%m-%d %H:%M', '%Y-%m-%d %H:%M:%S', '%Y-%m-%d', '%d-%m-%Y', '%d/%m/%Y %H:%M', '%d/%m/%Y'):
+            try:
+                return datetime.strptime(text, fmt)
+            except ValueError:
+                continue
+        try:
+            return datetime.fromisoformat(text.replace('Z', '+00:00'))
+        except ValueError:
+            return None
+    return None
+
+
+def is_completed_event(date_value, time_value=None):
+    if date_value is None and time_value is None:
+        return True
+
+    if isinstance(date_value, str) and not date_value.strip():
+        date_value = None
+    if isinstance(time_value, str) and not time_value.strip():
+        time_value = None
+
+    if date_value is None and time_value is None:
+        return True
+
+    if date_value is None:
+        parsed = parse_datetime(time_value)
+    elif time_value in (None, ''):
+        parsed = parse_datetime(date_value)
+    else:
+        parsed = parse_datetime(f"{date_value} {time_value}")
+
+    if parsed is None:
+        return True
+    return parsed <= datetime.now()
+
+
+def normalize_value(value):
+    if isinstance(value, datetime):
+        return value.strftime('%Y-%m-%d')
+    if isinstance(value, date):
+        return value.strftime('%Y-%m-%d')
+    return value
+
+
 def load_sheet_rows(sheet_name):
     wb = load_workbook(EXCEL_PATH, data_only=True)
     ws = wb[sheet_name]
@@ -49,7 +105,7 @@ def load_sheet_rows(sheet_name):
         item = {}
         for idx, header in enumerate(headers):
             value = row[idx] if idx < len(row) else None
-            item[header] = value
+            item[header] = normalize_value(value)
         data.append(item)
     return data
 
@@ -57,6 +113,13 @@ def load_sheet_rows(sheet_name):
 def build_matches_payload():
     wedstrijden_rows = load_sheet_rows('wedstrijden')
     invoer_rows = load_sheet_rows('wedstrijdinvoer')
+
+    completed_match_ids = set()
+    for row in wedstrijden_rows:
+        match_id = row.get('wedstrijd_id')
+        if not match_id:
+            continue
+        completed_match_ids.add(match_id) if is_completed_event(row.get('datum'), row.get('tijd')) else None
 
     by_match = {}
     for row in invoer_rows:
@@ -131,6 +194,7 @@ def build_matches_payload():
         'team': 'SV Twello 2',
         'seizoen': '2026/2027',
         'wedstrijden': wedstrijden,
+        'completed_match_ids': list(completed_match_ids),
     }
 
 
@@ -158,9 +222,12 @@ def build_players_json():
 
     player_lookup = {str(player['naam']).strip().lower(): player for player in spelers if player.get('naam')}
 
+    completed_match_ids = set(matches_payload.get('completed_match_ids', []))
+
     if trainings_rows:
         training_headers = [h for h in trainings_rows[0].keys() if h not in {'speler_id', 'speler naam'}]
-        training_total = len(training_headers)
+        completed_training_headers = [h for h in training_headers if is_completed_event(h)]
+        training_total = len(completed_training_headers)
         for row in trainings_rows[1:]:
             player_name = str(row.get('speler naam') or '').strip()
             key = player_name.lower()
@@ -168,7 +235,7 @@ def build_players_json():
             if not player:
                 continue
             attended = 0
-            for header in training_headers:
+            for header in completed_training_headers:
                 value = row.get(header)
                 if parse_truthy(value):
                     attended += 1
@@ -179,6 +246,12 @@ def build_players_json():
         attendance_totals = {}
         attendance_counts = {}
         for row in wedstrijd_rows:
+            match_id = row.get('wedstrijd_id')
+            if match_id and match_id in completed_match_ids:
+                pass
+            elif match_id is None or match_id not in completed_match_ids:
+                if match_id:
+                    continue
             player_name = str(row.get('speler_naam') or '').strip()
             if not player_name:
                 continue
@@ -208,8 +281,9 @@ def build_players_json():
         'seizoen': matches_payload['seizoen'],
         'wedstrijden': matches_payload['wedstrijden'],
     }
-    (BASE / 'spelers.json').write_text(json.dumps(payload, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    print(f'Wrote {len(spelers)} players, {len(staf)} staff members and {len(matches_payload["wedstrijden"])} matches to spelers.json')
+    data_js = "window.svTwelloZondag2Data = " + json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+    (BASE / 'data.js').write_text(data_js, encoding='utf-8')
+    print(f'Wrote {len(spelers)} players, {len(staf)} staff members and {len(matches_payload["wedstrijden"])} matches to data.js')
 
 
 if __name__ == '__main__':

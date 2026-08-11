@@ -1,4 +1,4 @@
-{
+window.svTwelloZondag2Data = {
   "spelers": [
     {
       "rugnummer": 22,
@@ -9,7 +9,7 @@
       "gastspeler": false,
       "aanvoerder": false,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 99,
@@ -20,9 +20,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 2,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 3,
@@ -33,9 +33,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 0,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 0,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 6,
@@ -46,9 +46,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 0,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 1,
@@ -59,9 +59,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 1,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 2,
@@ -72,9 +72,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 0,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 9,
@@ -85,9 +85,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 0,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 77,
@@ -98,9 +98,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 1,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 12,
@@ -111,9 +111,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 1,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 13,
@@ -124,9 +124,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 1,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 16,
@@ -137,9 +137,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 1,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 7,
@@ -150,9 +150,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 0,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 5,
@@ -163,9 +163,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 0,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 19,
@@ -176,9 +176,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 0,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 4,
@@ -189,9 +189,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 0,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 89,
@@ -202,9 +202,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 2,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 11,
@@ -215,9 +215,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 0,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 14,
@@ -228,9 +228,9 @@
       "gastspeler": false,
       "aanvoerder": true,
       "training": 0,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 10,
@@ -241,9 +241,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 1,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 17,
@@ -254,9 +254,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 2,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 15,
@@ -267,9 +267,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 2,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": null,
@@ -280,9 +280,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 0,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 27,
@@ -293,9 +293,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 0,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": 8,
@@ -306,9 +306,9 @@
       "gastspeler": false,
       "aanvoerder": false,
       "training": 1,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": null,
@@ -319,9 +319,9 @@
       "gastspeler": true,
       "aanvoerder": false,
       "training": 0,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     },
     {
       "rugnummer": null,
@@ -332,9 +332,9 @@
       "gastspeler": true,
       "aanvoerder": false,
       "training": 1,
-      "trainingTotal": 55,
+      "trainingTotal": 2,
       "attendance": 1,
-      "attendanceTotal": 25
+      "attendanceTotal": 1
     }
   ],
   "staf": [
@@ -368,7 +368,7 @@
   "wedstrijden": [
     {
       "id": "M623608225",
-      "datum": "2026-08-30",
+      "datum": "2026-08-10",
       "tijd": "11:30",
       "thuis": "Voorwaarts T 5",
       "uit": "SV Twello 2",
