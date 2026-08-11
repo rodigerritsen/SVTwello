@@ -447,6 +447,11 @@ document.querySelectorAll('.nav-btn').forEach(button => {
     });
 });
 
+document.getElementById('playerSearch')?.addEventListener('input', renderPlayers);
+document.getElementById('positionFilter')?.addEventListener('change', renderPlayers);
+document.getElementById('sortPlayers')?.addEventListener('change', renderPlayers);
+document.getElementById('matchFilter')?.addEventListener('change', renderMatches);
+
 function showPage(pageName) {
     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(button => button.classList.remove('active'));
@@ -681,7 +686,7 @@ function renderStatisticsList(header, rows) {
         return '<div class="empty">Geen gegevens beschikbaar.</div>';
     }
 
-    return '<div class="table-wrapper"><table><thead><tr>'
+    return '<div class="table-wrapper"><table class="stat-table"><thead><tr>'
         + '<th>Speler</th><th>' + escapeHTML(header) + '</th>'
         + '</tr></thead><tbody>'
         + rows.map((row, index) => {

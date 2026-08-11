@@ -337,6 +337,10 @@ table {
     min-width: 900px;
 }
 
+table.stat-table {
+    min-width: 0;
+}
+
 th,
 td {
     padding: 12px;
@@ -730,6 +734,10 @@ footer span {
     }
 
     .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-page-grid {
         grid-template-columns: 1fr;
     }
 }
