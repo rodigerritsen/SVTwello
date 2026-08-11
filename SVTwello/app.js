@@ -773,9 +773,8 @@ loadData();
 
 Promise.all([
     fetch('spelers.json').then(r => r.json()).catch(() => null),
-    fetch('speler-van-het-jaar.json').then(r => r.json()).catch(() => null),
     fetch('trainings.json').then(r => r.json()).catch(() => null)
-]).then(([spelers, svhj, trainings]) => {
+]).then(([spelers, trainings]) => {
     const matchList = [];
     const wedstrijden = [];
 
@@ -842,9 +841,6 @@ Promise.all([
         ? spelers.staf
         : (Array.isArray(spelers?.staff) ? spelers.staff : []);
     data.trainings = trainings?.trainings || [];
-    if (svhj?.winnaars) {
-        renderSpelerVanHetJaar(svhj.winnaars);
-    }
     setupAttendanceControls();
     renderAll();
 }).catch(() => {
