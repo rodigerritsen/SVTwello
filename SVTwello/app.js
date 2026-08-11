@@ -223,24 +223,38 @@ function renderStatistics() {
     const container = document.getElementById('statisticsContent');
     if (!container) return;
 
-    const tableRows = [...data.players]
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .map(player => [
-            player.name,
-            player.goals || 0,
-            player.assists || 0,
-            player.yellow || 0,
-            player.red || 0
-        ]);
+    const players = [...data.players].sort((a, b) => a.name.localeCompare(b.name));
+    const goals = players.map(player => [player.name, player.goals || 0]);
+    const assists = players.map(player => [player.name, player.assists || 0]);
+    const yellow = players.map(player => [player.name, player.yellow || 0]);
+    const red = players.map(player => [player.name, player.red || 0]);
 
     container.innerHTML = `
         <div class="card">
-            <div class="card-header"><h3>Statistieken</h3></div>
+            <div class="card-header"><h3>Doelpunten</h3></div>
             <div class="card-body">
-                ${renderStatisticsTable(
-                    ['Speler', 'Doelpunten', 'Assists', 'Geel', 'Rood'],
-                    tableRows
-                )}
+                ${renderStatisticsTable(['Speler', 'Aantal doelpunten'], goals)}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><h3>Assists</h3></div>
+            <div class="card-body">
+                ${renderStatisticsTable(['Speler', 'Aantal assists'], assists)}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><h3>Gele kaarten</h3></div>
+            <div class="card-body">
+                ${renderStatisticsTable(['Speler', 'Aantal gele kaarten'], yellow)}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><h3>Rode kaarten</h3></div>
+            <div class="card-body">
+                ${renderStatisticsTable(['Speler', 'Aantal rode kaarten'], red)}
             </div>
         </div>`;
 
